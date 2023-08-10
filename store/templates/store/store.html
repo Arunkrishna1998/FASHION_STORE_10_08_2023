@@ -1,0 +1,106 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Fashion Store{%endblock%}
+{%block body%}
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+                        <h4>Price</h4>
+                        <div class="price-range-wrap">
+                            <div class="price-picker">
+                                <form action="{%url 'filter_products_by_price'%}" method="get" onsubmit="return validatePriceForm()">
+                                <label>Minimum</label>
+                                <input type="text" id="minprice" name="min_price" value="{{minprice}}" min="{{minprice}}" max="{{maxprice}}" onkeypress="return /[0-9]/i.test(event.key)">
+                                <label>Maximum</label>
+                                <input type="text" id="maxprice" name="max_price" value="{{maxprice}}" min="{{minprice}}" max="{{maxprice}}" onkeypress="return /[0-9]/i.test(event.key)">
+                                <button type="submit">Apply</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar__item">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7">
+            <div class="row">
+            {%for product in product_list%}
+            <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="product__item">
+            <div class="product__item__pic set-bg" data-setbg="{{product.image.url}}">
+            <ul class="product__item__pic__hover">
+            {%if user.is_authenticated%}
+            <li><a href="{% url 'add_item_to_wish_list' product_id=product.uid %}"><i class="fa fa-heart"></i></a></li>
+            {%else%}
+            <li><a href="{% url 'login'%}"><i class="fa fa-heart"></i></a></li>
+            {%endif%}
+
+            <li><a href="{%url 'product_details' product_id=product.uid %}"><i class="fa fa-info-circle"></i></a></li>
+            </ul>
+            </div>
+            <div class="product__item__text">
+            <h6><a href="#">{{product.product_name}}</a></h6>
+            <h5>${{product.price}}</h5>
+            </div>
+            </div>
+            </div>
+            {%endfor%}
+
+            </div>
+            {%if product_list.has_other_pages%}
+            <div class="product__pagination">
+            {%if product_list.has_previous%}
+            <a href="?page={{product_list.previous_page_number}}"><i class="fa fa-long-arrow-left"></i></a>
+            {%else%}
+            <a href="#"><i class="fa fa-long-arrow-left"></i></a>
+            {%endif%}
+            {%for i in product_list.paginator.page_range%}
+            {%if product_list.number == i%}
+            <a href="#">{{i}}</a>
+            {%else%}
+            <a href="?page={{i}}">{{i}}</a>
+            {%endif%}
+            {%endfor%}
+            {%if product_list.has_next%}
+            <a href="?page={{product_list.next_page_number}}"><i class="fa fa-long-arrow-right"></i></a>
+            {%endif%}
+            </div>
+            {%endif%}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function validatePriceForm() {
+
+var productPriceMin = document.getElementById("minprice");
+var productPriceMinValue = parseFloat(productPriceMin.value);
+var productPriceMax = document.getElementById("maxprice");
+var productPriceMaxValue = parseFloat(productPriceMax.value);
+//alert('form submitting')
+if (isNaN(productPriceMinValue) || productPriceMinValue < 0 || productPriceMinValue > 10000) {
+    alert("Enter Valid Minimum Amount.");
+    return false; // Prevent form submission
+}
+
+if (isNaN(productPriceMaxValue) || productPriceMaxValue < 0 || productPriceMaxValue > 10000) {
+    alert("Enter Valid Minimum Amount.");
+    return false; // Prevent form submission
+}
+
+if (productPriceMaxValue < productPriceMinValue) {
+    alert("Maximum Amount Must be greater than Minimum Amount.");
+    return false; // Prevent form submission
+}
+
+
+return true; // Allow form submission
+}
+</script>
+
+{%endblock%}

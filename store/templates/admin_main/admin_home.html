@@ -1,0 +1,110 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Admin Home{%endblock%}
+{%block body%}
+{% if user.is_authenticated %}
+<main>
+    <div class="container text-center">
+        <h1 class="mt-4">Summary</h1>
+<!--        <ol class="breadcrumb mb-4">-->
+<!--            <li class="breadcrumb-item active">Notifications</li>-->
+<!--        </ol>-->
+        <div class="row text-center">
+                <h3>Low Stock Products</h3>
+            <div class="col-3"></div>
+            <div class="col-8">
+            {%if low_stock_items%}
+                <table class="low-stock-table">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                    <th>Action</th>
+                </tr>
+                {% for item in low_stock_items %}
+                <tr>
+                    <td>{{ item.product_id.product_name }}</td>
+                    <td>{{ item.Color_id.color }}</td>
+                    <td>{{ item.size }}</td>
+                    <td><a href="{%url 'product_variants_stock_update' size_id=item.uid product_id=item.product_id.uid%}">Update</a></td>
+                </tr>
+                {% endfor %}
+                </table>
+            {%else%}
+            <h4>No Data To Display</h4>
+            {%endif%}
+            </div>
+        </div>
+
+        <br><br><br>
+
+        <div class="row text-center" >
+            <h1>Sales</h1>
+            <div class="row text-center justify-content-between">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card  text-dark mb-4">
+                        <div class="card-body">Total Sales This Week:</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <p>${{ total_week|default:0 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card  text-dark mb-4">
+                        <div class="card-body">Total Sales This Month:</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <p>${{ total_month|default:0 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card  text-dark mb-4">
+                        <div class="card-body">Total Sales This Year:</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <p>${{ total_year|default:0 }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--                            <p>Total Sales This Week: ${{ total_week|default:0 }}</p>-->
+<!--                            <p>Total Sales This Month: ${{ total_month|default:0 }}</p>-->
+<!--                            <p>Total Sales This Year: ${{ total_year|default:0 }}</p>-->
+        </div>
+        <br><br>
+
+
+        <div class="row text-center justify-content-between">
+            <h4>Top 3 Sold Products</h4>
+            {%for product in top_3_products%}
+            {%for p in product_list%}
+            {%if p.uid ==  product.product%}
+            <div class="card" style="width: 18rem;margin-left:10px;height:400px;">
+            <img class="card-img-top" src="{{p.image.url}}" alt="Card image cap" height="50%">
+            <div class="card-body">
+            <h5 class="card-title">{{p.product_name}}</h5>
+            <p class="card-text">${{p.price}}</p>
+<!--                            <a href="#" class="btn btn-primary">View</a>-->
+            </div>
+            </div>
+            {%endif%}
+            {%endfor%}
+            {%endfor%}
+        </div>
+    </div>
+</main>
+<style>
+    .card{
+    background-color:#f2e7e6;
+    }
+
+    .low-stock-table{
+    width:70%;
+    }
+    .low-stock-table, th, td {
+    border: 1px solid;
+    }
+
+</style>
+
+{%endif%}
+{%endblock%}

@@ -1,0 +1,189 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Fashion Store{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            {%for item in cart_items%}
+                            <tbody>
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        <img src="img/cart/cart-1.jpg" alt="">
+                                        <h5>{{item.product.product_name}} [{{item.product_variant.Color_id.color}}({{item.product_variant.size}})]</h5>
+                                        <p></p>
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        ${{item.product_variant.price}}
+                                    </td>
+                                    <td class="shoping__cart__quantity">
+                                        <div class="quantity">
+                                            <div class="pro-qty-1">
+                                                <a href="{%url 'dec_cart_item' item_id=item.id%}" class="dec-link"><span class="dec qtybtn">-</span></a>
+                                                <input type="text" value="{{item.quantity}}" id="item-{{ item.id }}-quantity" readonly >
+                                                <a href="{%url 'inc_cart_item' item_id=item.id%}" class="inc-link"><span class="inc qtybtn">+</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="shoping__cart__total">
+                                        ${{ item.product_variant.price | multiply:item.quantity }}.00
+                                    </td>
+<!--                                    <td class="shoping__cart__item__close">-->
+<!--                                       <a href="../remove_from_cart?item_id={{item.id}}"><span class="icon_close"></span></a>-->
+<!--                                    </td>-->
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__btns">
+                        <a href="{%url 'view_store'%}" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+<!--                        <a href="#" class="primary-btn cart-btn cart-btn-right"><span class="icon_loading"></span>-->
+<!--                            Upadate Cart</a>-->
+                    </div>
+                </div>
+                <div class="col-lg-6">
+<!--                    <div class="shoping__continue">-->
+<!--                        <div class="shoping__discount">-->
+<!--                            <h5>Discount Codes</h5>-->
+<!--                            <form action="{%url 'apply_coupon'%}" method="post">-->
+<!--                                <input type="text" placeholder="Enter your coupon code" required>-->
+<!--                                <button type="submit" class="site-btn">APPLY COUPON</button>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+                <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Cart Total</h5>
+                        <ul>
+                            <li>Subtotal <span class="cart-total">${{total}}</span></li>
+                            <li>Tax <span class="tax">${{tax}}</span></li>
+                            <li>Total <span class="grand-total">${{grant_total}}</span></li>
+                        </ul>
+                        <a href="{%url 'checkout'%}" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <!-- Shoping Cart Section End -->
+<style>
+    .pro-qty-1 {
+	width: 140px;
+	height: 50px;
+	display: inline-block;
+	position: relative;
+	text-align: center;
+	background: #f5f5f5;
+	margin-bottom: 5px;
+}
+
+.pro-qty-1 input {
+	height: 100%;
+	width: 100%;
+	font-size: 16px;
+	color: #6f6f6f;
+	width: 50px;
+	border: none;
+	background: #f5f5f5;
+	text-align: center;
+}
+
+.pro-qty-1 .qtybtn {
+	width: 35px;
+	font-size: 16px;
+	color: #6f6f6f;
+	cursor: pointer;
+	display: inline-block;
+}
+</style>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.dec-link, .inc-link', function(event) {
+            event.preventDefault();
+            const url = $(this).attr('href');
+            const itemId = $(this).parent().find('input').attr('id').split('-')[1];
+
+            updateQuantity(url, itemId);
+        });
+
+        function updateQuantity(url, itemId) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else if (data.removed) {
+                        alert('Product Removed From Cart');
+                        location.reload();
+                    } else {
+                        // Update the input field with the corresponding item ID
+                        const quantityInput = $('#item-' + itemId + '-quantity');
+                        quantityInput.val(data.quantity);
+
+                        // Update the total price
+                        const price = parseFloat(data.price); // Convert to a floating-point number
+                        const quantity = parseInt(data.quantity); // Convert to an integer number
+                        const total = price * quantity;
+                        const totalPriceElement = quantityInput.closest('tr').find('.shoping__cart__total');
+                        totalPriceElement.text('$' + total.toFixed(2));
+
+
+
+
+                        //console.log('price '+price+' data.price '+data.price)
+                        //console.log('quantity'+quantity)
+                        //console.log('total'+total)
+                        console.log('total_existing '+total_existing)
+
+
+                        // Update cart total, tax, and grand total
+                        const cartTotalElement = $('.cart-total');
+                        const taxElement = $('.tax');
+                        const grandTotalElement = $('.grand-total');
+                        cartTotalElement.text('$' + data.total.toFixed(2));
+
+                        taxElement.text('$' + data.tax.toFixed(2));
+                        grandTotalElement.text('$' + data.grant_total.toFixed(2));
+                    }
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+    });
+</script>
+
+
+
+
+{%endblock%}

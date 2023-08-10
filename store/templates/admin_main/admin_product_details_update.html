@@ -1,0 +1,91 @@
+{% extends 'admin_main/admin_base.html' %}
+{% load static %}
+{% block title %}Product Details Update{% endblock %}
+{% block body %}
+{% if user.is_authenticated and user.is_staff %}
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Update Product</h1>
+        <div class="image-container">
+        <a href="{{product.image.url}}" target="_blank">
+        <img src="{{product.image.url}}" width="100">
+        </a>
+        </div>
+
+        <div class="container" style="width:70%">
+            <form action="{% url 'admin_product_details_update' %}" method="post" enctype="multipart/form-data" onsubmit="return validateEditForm()">
+                {% csrf_token %}
+                <input type="hidden" name='id' value="{{product.uid}}">
+                <div class="form-group">
+                    <label for="productname">Image</label>
+                    <input type="file" class="form-control" name="image" id="image">
+                </div>
+                <div class="form-group">
+                    <label for="productname">Product Name</label>
+                    <input type="text" class="form-control" name="productname" id="productname" value="{{product.product_name}}" onkeypress="return /[a-z A-Z]/i.test(event.key)">
+                </div>
+                <div class="form-group">
+                    <label for="productprice">Product Price</label>
+                    <input type="text" class="form-control" name="productprice" id="productprice" value="{{product.price}}"
+                    onkeypress="return /[0-9 .]/i.test(event.key)">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Category</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name="category">
+                        <option value="{{ product.category.uid }}">{{ product.category }}</option>
+                        {% for category in category_list %}
+                        <option value="{{ category.uid }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product_description">Description</label>
+                    <textarea class="form-control" id="product_description" name="product_description" rows="3" required>{{ product.product_description }}</textarea>
+                </div>
+
+                <div class="btn-group" style="float:right;margin-top:25px">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="reset" class="btn btn-warning">Reset</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</main>
+<div class="container" style="text-align:center">
+    <a class="btn btn-outline-primary" href="../product_variants_view?id={{product.uid}}">View Variants</a>
+</div>
+
+<script>
+function validateEditForm() {
+var productname = document.getElementById("productname").value;
+var product_description = document.getElementById("product_description").value;
+
+var productPriceInput = document.getElementById("productprice");
+var productPriceValue = parseFloat(productPriceInput.value);
+
+if (isNaN(productPriceValue) || productPriceValue <= 0) {
+    alert("Product price must be a valid positive number.");
+    return false; // Prevent form submission
+}
+
+if (product_description.trim() === "") {
+alert("Only white spaces in Description.");
+return false; // Prevent form submission
+}
+
+
+if (productname.trim() === "") {
+alert("Only white spaces in Product Name.");
+return false; // Prevent form submission
+}
+return true; // Allow form submission
+}
+</script>
+
+
+
+
+{% endif %}
+{% endblock %}

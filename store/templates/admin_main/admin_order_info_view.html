@@ -1,0 +1,92 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Order Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated and user.is_staff%}
+<main>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Order Details</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Ord.No. {{order.order_number}}</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+        <h3>Order Status : {{order.status}}</h3>
+        <div style="width:40%">
+            {%if order.status == 'Completed'%}
+            <div class="input-group">
+                <select  name="status" id="status_1" class="form-control"  required>
+                    <option value="Completed" disabled selected>Completed</option>
+                </select>
+            </div>
+            {%elif order.status == 'Cancelled' %}
+            <div class="input-group">
+                <select  name="status" id="status_2" class="form-control"  required>
+                    <option value="Cancelled" disabled selected>Cancelled</option>
+                </select>
+            </div>
+            {%else%}
+            <form action="{% url 'order_status_update'%}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{order.id}}" name="id">
+                <div class="input-group">
+                    <select  name="status" id="status" class="form-control"  required>
+                        <option value="0" disabled selected>Select Status</option>
+<!--                        <option value="New">New</option>-->
+                        <option value="Accepted">Accepted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <input type="submit" class="btn btn-primary" value="Update">
+                </div>
+            </form>
+            {%endif%}
+        </div>
+        </div>
+        <div class="row">
+        <div class="col md-4">
+           <h6 class="text-muted">Delivery to</h6>
+            <p>{{order.first_name}} {{order.last_name}} <br>
+            Phone {{order.phone}} Email: {{order.email}} <br>
+            Location: {{order.address_line_1}},{{order.city}} , {{order.state}},  {{order.country}}, <br>
+            P.O. Box: {{order.pincode}}
+            </p>
+        </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col md-8" >
+           <table class="table-items">
+               <tr>
+                   <th>Product</th>
+                   <th>Price</th>
+                   <th>Payment</th>
+                   <th>Quantity</th>
+                   <th>Ordered at</th>
+                   <th>Updated at</th>
+                   <th>Variant</th>
+               </tr>
+               {%for ord in order_details%}
+               <tr>
+                   <td>{{ord.product.product_name}}</td>
+                   <td>{{ord.product_price}}</td>
+                   <td>{{ord.payment.payment_method}}</td>
+                   <td>{{ord.quantity}}</td>
+                   <td>{{ord.created_at}}</td>
+                    <td>{{ord.updated_at}}</td>
+                   <td>{{ord.color}}-{{ord.size}}</td>
+               </tr>
+               {%endfor%}
+           </table>
+       </div>
+    </div>
+</div>
+</main>
+<style>
+.table-items, th, td {
+border: 1px solid black;
+}
+</style>
+{%endif%}
+{%endblock%}

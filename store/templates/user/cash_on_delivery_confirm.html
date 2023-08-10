@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Success</title>
+</head>
+<body>
+<div class="container" style="text-align:center">
+    <h2> Order Success</h2>
+    <h3>Order No. : {{order.order_number}}</h3>
+    <div class="success-png-image">
+        <img src="{%static 'assets/img/success-png-image.png'%}" width="100" height="100">
+    </div>
+    <div class="btn-home">
+        <h4><a class="back-to-home" href="{%url 'index'%}">Back to Home</a></h4>
+    </div>
+</div>
+</body>
+<style>
+    .back-to-home{text-decoration:none;color:black}
+    h4{border:2px solid black;border-radius:5px;width:200px;margin:auto;padding-top:5px;padding-bottom:5px}
+</style>
+</html>

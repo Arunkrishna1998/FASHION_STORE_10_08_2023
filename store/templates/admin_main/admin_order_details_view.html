@@ -1,0 +1,66 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Order Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated and user.is_staff%}
+
+<main>
+    <div class="container-fluid px-4">
+    <h1 class="mt-4">Orders</h1>
+    <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Order Details View</li>
+    </ol>
+        <div class="card mb-4">
+        <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Order Details
+        </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>order_number</th>
+                            <th>Ordered at</th>
+                            <th>Last updated</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Order Number</th>
+                            <th>Ordered at</th>
+                            <th>Last updated</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    {%for order in order_list%}
+                        <tr>
+                            <td>{{order.first_name}} {{order.last_name}}</td>
+                            <td>{{order.email}}</td>
+                            <td>{{order.phone}}</td>
+                            <td>{{order.order_number}}</td>
+                            <td>{{order.created_at}}</td>
+                            <td>{{order.updated_at}}</td>
+                            <td>{{order.status}}</td>
+                            <td>
+                            <a class="btn btn-info" href="{%url 'admin_order_info_view' order=order.id%}">More Info</a>
+                            </td>
+                        </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{%endif%}
+{%endblock%}

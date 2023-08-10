@@ -1,0 +1,113 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Product Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated and user.is_staff%}
+
+
+
+
+<main>
+<div class="container-fluid px-4">
+        <h1 class="mt-4">Products</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Product Details</li>
+        </ol>
+
+        <div class="input-group admin-search-box">
+            <form action="{%url 'admin_product_details_search'%}" method="post">
+                 {% csrf_token %}
+                <div class="input-group">
+                <input type="text" class="form-control" name="query" id="query" placeholder="Enter Name">
+                <button class="btn btn-info" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card mb-4">
+            <a class="btn btn-primary" href="/admin_product_add" style="width:150px;">New Product</a>
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Product Details
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                    <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>In Store</th>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                {% for product in products_list %}
+                <tr>
+                <td><img src="{{product.image.url}}" width="100"></td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.category.category_name }}</td>
+                <td>
+                    <div class="description-content">
+                        <div class="truncated-description">
+                        {{ product.product_description|truncatechars:100 }}
+                        <span class="read-more-dots">...</span>
+                        </div>
+                    </div>
+                </td>
+                {%if product.in_store%}
+                <td>In Store</td>
+                {%else%}
+                <td>Not In Store</td>
+                {%endif%}
+                <td>
+                  <div class="btn-group">
+                    <!--        <a class="btn btn-outline-info" href="../admin_product_update?id={{product.uid}}" style="width:70px">View</a>-->
+                    <a class="btn btn-outline-primary" href="../admin_product_details_update?id={{product.uid}}" style="width:150px">View/Update</a>
+                    <a class="btn btn-outline-warning" href="{%url 'add_remove_product_to_store' product_id=product.uid%}" style="width:150px">{%if product.in_store%}Remove From Store{%else%}Add To Store{%endif%}</a>
+                    <a class="btn btn-outline-danger" href="../delete_product?id={{product.uid}}" style="width:80px">Delete</a>
+                  </div>
+                </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+</main>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const readMoreBtns = document.querySelectorAll('.read-more-btn');
+
+  readMoreBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const descriptionContent = this.parentElement;
+      const truncatedDescription = descriptionContent.querySelector('.truncated-description');
+      const fullDescription = descriptionContent.querySelector('.read-more-hidden');
+      const readMoreDots = descriptionContent.querySelector('.read-more-dots');
+
+      if (truncatedDescription.style.display === 'none') {
+        truncatedDescription.style.display = 'inline';
+        fullDescription.style.display = 'none';
+        readMoreDots.style.display = 'inline';
+        this.textContent = 'Read More';
+      } else {
+        truncatedDescription.style.display = 'none';
+        fullDescription.style.display = 'inline';
+        readMoreDots.style.display = 'none';
+        this.textContent = 'Read Less';
+      }
+    });
+  });
+});
+</script>
+
+
+{%endif%}
+{%endblock%}

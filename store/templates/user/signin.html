@@ -1,0 +1,278 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div class="container" style="width:40%;margin-top:10%;border:2px solid black;border-radius:5px; padding:40px">-->
+<!--  <h3>SignIn</h3>-->
+<!--  {% if username %}-->
+<!--  <form method="post" action="{% url 'signin' %}">-->
+<!--    {% csrf_token %}-->
+<!--    <div class="form-outline mb-4">-->
+<!--      <label class="form-label">*Email</label>-->
+<!--      <input name="username" id="username" type="email" class="form-control" value="{{ username }}" required>-->
+<!--    </div>-->
+
+<!--    <div class="form-outline mb-4">-->
+<!--      <label class="form-label">OTP</label>-->
+<!--      <input name="password" id="password" type="password" class="form-control">-->
+<!--    </div>-->
+
+<!--    <div class="row mb-4" style="text-align:center">-->
+<!--      <div class="col d-flex justify-content-center">-->
+<!--        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>-->
+<!--      </div>-->
+<!--      <div class="col">-->
+<!--        &lt;!&ndash; Simple link &ndash;&gt;-->
+<!--        &lt;!&ndash;      <a href="#!">Forgot password?</a>&ndash;&gt;-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="text-center">-->
+<!--      <p>Don't have an account? <a href="/register">Register</a></p>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--  <a href="your-link.html" id="sendOTP">Send OTP Again</a>-->
+<!--  {% else %}-->
+<!--  <form method="post" action="{% url 'login' %}">-->
+<!--    {% csrf_token %}-->
+<!--    <div class="form-outline mb-4">-->
+<!--      <label class="form-label">*Email</label>-->
+<!--      <input name="username" id="username_1" type="email" class="form-control" required>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash;  <div class="form-outline mb-4">&ndash;&gt;-->
+<!--    &lt;!&ndash;    <label class="form-label">Password</label>&ndash;&gt;-->
+<!--    &lt;!&ndash;    <input name="password" id="password_1" type="password" class="form-control" >&ndash;&gt;-->
+<!--    &lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--    <div class="row mb-4" style="text-align:center">-->
+<!--      <div class="col d-flex justify-content-center">-->
+<!--        <button type="submit" class="btn btn-primary btn-block mb-4">Request OTP</button>-->
+<!--      </div>-->
+<!--      <div class="col">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="text-center">-->
+<!--     <p>Don't have an account? <a href="/register">Register</a></p>-->
+<!--    </div>-->
+<!--  </form>-->
+
+<!--  {% endif %}-->
+
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>-->
+<!--}-->
+
+<!--</body>-->
+<!--<style>-->
+<!--  body {-->
+<!--  display: flex;-->
+<!--  justify-content: center;-->
+<!--  align-items: center;-->
+<!--  height: 100vh;-->
+<!--  margin: 0;-->
+<!--  font-family: Arial, sans-serif;-->
+<!--}-->
+
+<!--</style>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<!--{%include '../messages.html'%}-->
+<body>
+
+<div class="container" style="width:40%;margin-top:10%;border:2px solid black;border-radius:5px; padding:40px">
+  {%include '../messages.html'%}
+  <h3>SignIn</h3>
+  {% if username %}
+  Please go to your email {{username}} and check for the OTP. Note: Check your spam folder
+  <form method="post" action="{% url 'signin' %}">
+    {% csrf_token %}
+    <div class="form-outline mb-4">
+      <label class="form-label">*Email</label>
+      <input name="username" id="username" type="email" class="form-control" value="{{ username }}" required>
+    </div>
+
+    <div class="form-outline mb-4">
+      <label class="form-label">OTP</label>
+      <input name="password" id="password" type="password" class="form-control">
+    </div>
+
+    <div class="row mb-4" style="text-align:center">
+      <div class="col d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+      </div>
+      <div class="col">
+        <!-- Simple link -->
+        <!--      <a href="#!">Forgot password?</a>-->
+      </div>
+    </div>
+    <div class="text-center">
+      <p>Don't have an account? <a href="/register">Register</a></p>
+    </div>
+    <div class="container">
+    <input type="text" name="remaining_time" id="remaining_time" value="{{ remaining_time }}"> Seconds Remaining
+    </div>
+  </form>
+
+
+  {% else %}
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <div class="form-outline mb-4">
+      <label class="form-label">*Email</label>
+      <input name="username" id="username_1" type="email" class="form-control" required>
+    </div>
+
+    <!--  <div class="form-outline mb-4">-->
+    <!--    <label class="form-label">Password</label>-->
+    <!--    <input name="password" id="password_1" type="password" class="form-control" >-->
+    <!--  </div>-->
+
+    <div class="row mb-4" style="text-align:center">
+      <div class="col d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary btn-block mb-4">Request OTP</button>
+      </div>
+      <div class="col">
+
+      </div>
+    </div>
+    <div class="text-center">
+     <p>Don't have an account? <a href="/register">Register</a></p>
+    </div>
+  </form>
+
+  {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+
+<style>
+        /* Style the input field to look like a label */
+        #remaining_time {
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: inherit;
+            font-family: inherit;
+            color: #000; /* Optional: Set the color to match your design */
+            outline: none;
+            cursor: default;
+            width: 30px; /* Optional: Adjust the width to your liking */
+        }
+    </style>
+<script>
+        // Function to update the countdown timer and call delete_otp function
+        function countdown() {
+            // Get the input element
+            const inputElement = document.getElementById('remaining_time');
+
+            // Get the remaining time value and convert it to a number
+            let remainingTime = parseInt(inputElement.value);
+
+            // Check if the remaining time is greater than 0
+            if (remainingTime > 0) {
+                // Decrement the remaining time by 1
+                remainingTime--;
+
+                // Update the input field value with the new remaining time
+                inputElement.value = remainingTime;
+
+                // Call the countdown function again after 1 second
+                setTimeout(countdown, 1000);
+            } else {
+                // Call the delete_otp function when the remaining time reaches 0
+                showConfirmation();
+            }
+        }
+
+        // Function to display the confirmation box
+        function showConfirmation() {
+            const result = confirm('OTP has expired. Do you want to Try Again?');
+            if (result) {
+                // User clicked "Yes," redirect to the login page
+                window.location.href = '{% url "login" %}';
+            } else {
+                // User clicked "No," redirect to the index page
+                window.location.href = '{% url "index" %}';
+            }
+        }
+
+        // Start the countdown when the page loads
+        countdown();
+    </script>
+
+<!--<script>-->
+<!--  // Function to start the countdown timer for 2 minutes-->
+<!--  function startTimer(duration, display) {-->
+<!--    let timer = duration, minutes, seconds;-->
+<!--    let interval = setInterval(function () {-->
+<!--      minutes = parseInt(timer / 60, 10);-->
+<!--      seconds = parseInt(timer % 60, 10);-->
+
+<!--      minutes = minutes < 10 ? "0" + minutes : minutes;-->
+<!--      seconds = seconds < 10 ? "0" + seconds : seconds;-->
+
+<!--      display.textContent = minutes + ":" + seconds;-->
+
+<!--      if (&#45;&#45;timer < 0) {-->
+<!--        // When countdown hits zero, show the "Send OTP Again" link-->
+<!--        document.getElementById("countdown").style.display = "none";-->
+<!--        document.getElementById("sendOTP").style.display = "inline";-->
+<!--        clearInterval(interval); // Stop the interval when timer reaches zero-->
+<!--      }-->
+<!--    }, 1000);-->
+<!--  }-->
+
+<!--  {% if username %}-->
+<!--    // Start the countdown for 2 minutes (120 seconds)-->
+<!--    const twoMinutes = 120,-->
+<!--          display = document.getElementById("countdown");-->
+<!--    display.style.display = "inline"; // Show the countdown div-->
+<!--    startTimer(twoMinutes, display);-->
+<!--  {% endif %}-->
+
+<!--  // Function to call the "delete_otp" view in the Django backend-->
+<!--  function deleteOTP() {-->
+<!--    // Use AJAX to make an asynchronous request to the Django view-->
+<!--    // Replace 'url-to-delete-otp-view' with the actual URL of the delete_otp view-->
+<!--    fetch('url-to-delete-otp-view')-->
+<!--      .then(response => response.json())-->
+<!--      .then(data => {-->
+<!--        // Handle the response data if needed-->
+<!--        console.log(data);-->
+<!--      })-->
+<!--      .catch(error => {-->
+<!--        console.error('Error:', error);-->
+<!--      });-->
+<!--  }-->
+<!--</script>-->
+
+</body>
+<style>
+  body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+</style>
+</html>
+

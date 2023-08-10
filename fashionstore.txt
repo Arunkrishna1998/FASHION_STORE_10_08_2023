@@ -1,0 +1,1 @@
+ssh -i "fashionstore.pem" ubuntu@ec2-16-171-10-60.eu-north-1.compute.amazonaws.com

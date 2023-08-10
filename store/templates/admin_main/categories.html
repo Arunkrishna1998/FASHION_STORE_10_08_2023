@@ -1,0 +1,128 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Category Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated %}
+
+
+
+<main>
+     <div class="container-fluid px-4">
+            <h1 class="mt-4">Categories</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Categories</li>
+            </ol>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        {% if edit%}
+                        <h4>Edit Category</h4>
+                        <form action="{%url 'admin_categories_edit'%}" method="post" onsubmit="return validateEditForm()">
+                        {% csrf_token %}
+
+                            <div class="input-group">
+                                <input id="category_1" class="form-control" name="category" value="{{ctg.category_name}}" required>
+                                <input type="hidden" name="id" value="{{ctg.uid}}">
+                                <button class="btn btn-success" type="submit">Update</button>
+                            </div>
+
+                        </form>
+                        {%else%}
+                        <h4>Add New Category</h4>
+                        <form action="{%url 'admin_categories_add'%}" method="post" onsubmit="return validateAddForm()">
+                        {% csrf_token %}
+
+                            <div class="input-group">
+                                <input id="category" class="form-control" name="category" placeholder="Category Name" required>
+                                <button class="btn btn-success" type="submit">Submit</button>
+                            </div>
+
+                        </form>
+                        {%endif%}
+                        <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group admin-search-box">
+                    <h3>Search Category</h3>
+                    <form action="{%url 'admin_category_search'%}" method="post">
+                         {% csrf_token %}
+                        <div class="input-group">
+                        <input type="text" class="form-control" name="query" id="query" placeholder="Search..">
+                        <button class="btn btn-info" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        Category Details
+                    </div>
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            {%for category in category_list%}
+                            <tr>
+                                <td>{{category}}</td>
+                                <td>
+                                    <a class="btn btn-warning" href="../admin_categories_edit?id={{category.uid}}">Edit</a>
+                                    {%if category.is_deleted%}
+                                    <a class="btn btn-success" href="../admin_categories_delete?id={{category.uid}}" onclick="return confirm('Are You Sure You want to unblock this Category?')">Unblock</a>
+                                    {%else%}
+                                    <a class="btn btn-danger" href="../admin_categories_delete?id={{category.uid}}" onclick="return confirm('Are You Sure You want to block this Category?')">Block</a>
+                                    {%endif%}
+                                </td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+     </div>
+</main>
+
+
+{%endif%}
+
+<script>
+function validateAddForm() {
+var userInput = document.getElementById("category").value;
+if (userInput.trim() === "") {
+alert("Input cannot be only white spaces.");
+return false; // Prevent form submission
+}
+return true; // Allow form submission
+}
+
+function validateEditForm() {
+var userInput = document.getElementById("category_1").value;
+if (userInput.trim() === "") {
+alert("Input cannot be only white spaces.");
+return false; // Prevent form submission
+}
+return true; // Allow form submission
+}
+</script>
+
+
+
+{%endblock%}
+
+
+

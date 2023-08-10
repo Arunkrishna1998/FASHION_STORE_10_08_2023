@@ -1,0 +1,43 @@
+{% extends "../store/main.html" %}
+{%load static%}
+{%block title%}Dashboard{%endblock%}
+{%block body%}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container">
+	<div class="row">
+	{%include 'user/dashboard_sidenav.html'%}
+	<main class="col-md-9">
+		<article class="card">
+
+		<div class="row" style="text-align:center;">
+			<div class="col-6" ><a class="btn settings-button" href="{%url 'user_profile_view'%}">Profile</a></div>
+			<div class="col-6" ><a class="btn settings-button" href="{%url 'user_address_view'%}">Address</a></div>
+		</div>
+
+		</article>
+
+	</main>
+</div>
+</div>
+
+
+</section>
+<style>
+	.settings-button{
+	border:2px solid #fc9803;
+	height:40px;
+	width:200px;
+	margin-top:50px;
+	}
+	.settings-button:hover{
+	background-color:#fc9803;
+	border:2px solid black;
+	height:40px;
+	width:200px;
+	margin-top:50px;
+	}
+
+</style>
+{%endblock%}

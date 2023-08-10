@@ -1,0 +1,220 @@
+{% extends 'admin_main/admin_base.html' %}
+{% load static %}
+{% block title %}Product Variants{% endblock %}
+{% block body %}
+{% if user.is_authenticated and user.is_staff %}
+
+<main>
+    <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+
+      <script>
+    function hideUpdateForm() {
+      var updateForm = document.getElementById('updateform');
+      updateForm.classList.add('hidden');
+
+      var addForm = document.getElementById('addForm');
+      addForm.classList.remove('hidden');
+    }
+
+    function showUpdateForm() {
+      var updateForm = document.getElementById('updateform');
+      updateForm.classList.remove('hidden');
+
+      var addForm = document.getElementById('addForm');
+      addForm.classList.add('hidden');
+    }
+  </script>
+
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Product Variants</h1>
+<!--        {%for message in messages%}-->
+<!--        {{message}}-->
+<!--        {%endfor%}-->
+
+
+            {%if update%}
+        <div id="updateform" class="container" style="width:100%;border:2px solid blue;padding:10px;" >
+            <h3>Update Details/Add Stock</h3>
+            <form method="post"  action="{% url 'product_variants_stock_updates' %}" onsubmit="return validateEditForm()">
+                {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{product_id}}" >
+            <input type="hidden" name="size_id" value="{{size.uid}}">
+
+                <br><br>
+                <div id="variants-container_1">
+                    <div class="variant-item">
+                        <label for="size2">Size:</label>
+                        <input class="input_field" type="text" id="size2" name="size" value="{{size.size}}" required>
+                        <label for="price2">Price:</label>
+                        <input class="input_field" type="text" id="price2" name="price" value="{{size.price}}" required onkeypress="return /[0-9 .]/i.test(event.key)">
+
+                        <label for="stock2">Stock:</label>
+                        <input class="input_field" type="text" id="stock2" name="stock"  value="{{size.stock}}" required>
+                    </div>
+                </div>
+                <br>
+                <br><br>
+                <input class="btn btn-success" type="submit" value="Update">
+                <a class="btn btn-warning" href="{%url 'variants_stock_update_cancel' product_id%}">Cancel</a>
+            </form>
+        </div>
+            {%else%}
+        <div class="container" style="width:100%;border:2px solid blue;padding:10px;" id="addForm">
+            <h3>Add New Variants</h3>
+            <form method="post"  action="{%url 'product_variants_add'%}" >
+                {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{product_id}}">
+                <label for="color">Select Color:</label>
+                <select id="color" name="color" class="colorpicker">
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+
+                </select>
+                <br><br>
+                <div id="variants-container">
+                    <div class="variant-item">
+                        <label for="size1">Size:</label>
+                        <input class="input_field" type="text" id="size1" name="size[]" placeholder="Size" list="sizeOptions" required>
+                        <label for="price1">Price:</label>
+                        <input class="input_field" type="text" id="price1" name="price[]" placeholder="Price" onkeypress="return /[0-9 .]/i.test(event.key)" required>
+                        <label for="stock1">Stock:</label>
+                        <input class="input_field" type="text" id="stock1" name="stock[]" placeholder="Stock" required>
+                    </div>
+                </div>
+                <br>
+                <button type="button" onclick="addVariant()">+</button>
+                <br><br>
+                <input class="btn btn-success" type="submit" value="Submit">
+            </form>
+            <datalist id="sizeOptions">
+                <option value="XS">
+                <option value="S">
+                <option value="M">
+                <option value="L">
+                <option value="XL">
+                <option value="XXL">
+            </datalist>
+            <script>
+                var variantCounter = 1;
+
+                function addVariant() {
+                    variantCounter++;
+                    var variantsContainer = document.getElementById('variants-container');
+                    var variantItem = document.createElement('div');
+                    variantItem.className = 'variant-item';
+                    variantItem.innerHTML = `
+                        <label for="size${variantCounter}">Size:</label>
+                        <input class="input_field" type="text" id="size${variantCounter}" name="size[]" placeholder="Size" list="sizeOptions" required>
+                        <label for="price${variantCounter}">Price:</label>
+                        <input class="input_field" type="text" id="price${variantCounter}" name="price[]" placeholder="Price" onkeypress="return /[0-9 .]/i.test(event.key)" required>
+                        <label for="stock${variantCounter}">Stock:</label>
+                        <input class="input_field" type="text" id="stock${variantCounter}" name="stock[]" placeholder="Stock" onkeypress="return /[0-9]/i.test(event.key)" required>
+                        <button type="button" onclick="removeVariant(this)">-</button>
+                    `;
+                    variantsContainer.appendChild(variantItem);
+                }
+
+                function removeVariant(button) {
+                var variantsContainer = document.getElementById('variants-container');
+                variantsContainer.removeChild(button.parentNode);
+                }
+
+            </script>
+
+        </div>
+            {%endif%}
+
+    </div>
+</main>
+<style>
+.colorpicker{
+border:2px solid red;
+border-radius:5px;
+margin-top:10px;
+height:40px;
+width:200px;
+}
+
+.input_field{
+border:2px solid red;
+border-radius:5px;
+margin-top:10px;
+height:40px;
+}
+
+
+    .tableitems {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+.tableitems, th, td {
+    border: 1px solid black;
+}
+.actionbtn{
+width: 50%;
+}
+
+</style>
+
+<div class="container" >
+    <h3 style="margin-left:40%;margin-right:40%;margin-top:50px;">Variants Lists</h3>
+    {%for color in color_list%}
+    <h5>Color : <span>{{color.color}}</span> <a href="{%url 'product_variant_images' color=color.uid%}" style="text-decoration:none;">View Images</a></h5>
+<!--    href="../product_variant_images?color={{color.uid}}"-->
+    <table class="tableitems">
+        <tr>
+            <th>Size</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+        {%for size in size_list%}
+        {%if size.Color_id == color %}
+        <tr>
+            <td>{{size.size}}</td>
+            <td>{{size.price}}</td>
+            <td>{{size.stock}}</td>
+            <td class="actionbtn">
+                <a class="btn btn-info" href="{%url 'product_variants_stock_update' size_id=size.uid product_id=product_id%}">Stock Update</a>
+                <a class="btn btn-danger" href="{%url 'product_variants_stock_delete' size_id=size.uid product_id=product_id%}">Remove</a>
+            </td>
+
+        </tr>
+        {%endif%}
+        {%endfor%}
+    </table>
+    {%endfor%}
+</div>
+
+
+<script>
+function validateEditForm() {
+    var priceInput = parseFloat(document.getElementById("price2").value);
+    var stockInput = parseInt(document.getElementById("stock2").value);
+
+    if (isNaN(priceInput) || priceInput <= 0) {
+        alert("Price should be a valid positive number above 0.");
+        return false; // Prevent form submission
+    }
+
+    if (isNaN(stockInput) || stockInput <= 0) {
+        alert("Stock should be a valid positive integer above 0.");
+        return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission
+}
+</script>
+
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,197 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}User Profile{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+
+                </div>
+            </div>
+            <div class="row">
+				<div class="col-lg-7">
+					<div class="card mb-4">
+					  <div class="card-body">
+						  <div class="row">
+							  <div class="col-sm-3">
+								<p class="mb-0">User Name</p>
+							  </div>
+							  <div class="col-sm-9">
+								<p class="text-muted mb-0">{{user.username}}</p>
+							  </div>
+							</div>
+						  <hr>
+							<div class="row">
+							  <div class="col-sm-3">
+								<p class="mb-0">Full Name</p>
+							  </div>
+							  <div class="col-sm-9">
+								<p class="text-muted mb-0">{{user.first_name}} {{user.last_name}}</p>
+							  </div>
+							</div>
+							<hr>
+							<div class="row">
+							  <div class="col-sm-3">
+								<p class="mb-0">Email</p>
+							  </div>
+							  <div class="col-sm-9">
+								<p class="text-muted mb-0">{{user.email}}</p>
+							  </div>
+							</div>
+							<hr>
+							<div class="row">
+							  <div class="col-sm-3">
+								<p class="mb-0">Phone</p>
+							  </div>
+							  <div class="col-sm-9">
+								<p class="text-muted mb-0">{{u.contact}}</p>
+							  </div>
+							</div>
+							<hr>
+							<div class="row">
+							  <div class="col-sm-3">
+								<p class="mb-0">Date Joined</p>
+							  </div>
+							  <div class="col-sm-9">
+								<p class="text-muted mb-0">{{user.date_joined}}</p>
+							  </div>
+							</div>
+							<hr>
+						  <div class="row">
+	<!--						  <div class="col-sm-3">-->
+	<!--							<p class="mb-0">Date Joined</p>-->
+	<!--						  </div>-->
+							  <div class="col-sm-9">
+								  <div class="btn-edit">
+									  <a href="{%url 'user_profile_edit'%}">Edit</a>
+								  </div>
+
+	<!--							<p class="text-muted mb-0">{{user.date_joined}}</p>-->
+							  </div>
+							</div>
+
+
+
+	<!--						<div class="row">-->
+	<!--						  <div class="col-sm-3">-->
+	<!--							<p class="mb-0">Mobile</p>-->
+	<!--						  </div>-->
+	<!--						  <div class="col-sm-9">-->
+	<!--							<p class="text-muted mb-0">(098) 765-4321</p>-->
+	<!--						  </div>-->
+	<!--						</div>-->
+	<!--						<hr>-->
+	<!--						<div class="row">-->
+	<!--					  <div class="col-sm-3">-->
+	<!--						<p class="mb-0">Address</p>-->
+	<!--					  </div>-->
+	<!--					  <div class="col-sm-9">-->
+	<!--						<p class="text-muted mb-0">Bay Area, San Francisco, CA</p>-->
+	<!--					  </div>-->
+	<!--					</div>-->
+					  </div>
+					</div>
+				  </div>
+				{%if edit%}
+				<div class="col-lg-5">
+					<form action="{%url 'user_profile_edit'%}" method="post" onsubmit="return validateEditForm()">
+					{% csrf_token %}
+						<div>
+							<div class="form-group">
+								<label>User Name : </label>
+								<input class="form-control" value="{{user.username}}" readonly>
+							</div>
+							<div class="form-group">
+								<label>First Name : </label>
+								<input id="first_name" class="form-control" value="{{user.first_name}}" name="first_name" onkeypress="return /[a-z A-Z]/i.test(event.key)">
+							</div>
+							<div class="form-group">
+								<label>Last Name : </label>
+								<input id="last_name" class="form-control" value="{{user.last_name}}" name="last_name"  onkeypress="return /[a-z A-Z]/i.test(event.key)">
+							</div>
+							<div class="form-group">
+								<label>Email : </label>
+								<div class="input-group">
+									<input class="form-control" value="{{user.email}}" name="email" type="email" id="email" required>
+									<a class="btn btn-info" onclick="verifyEmail()" id="getOTP">Get OTP</a>
+									<p>If You are Updating Your Email Verify new Email Using OTP</p>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Contact : </label>
+								<input class="form-control" value="{{u.contact}}" name="contact" id="contact" onkeypress="return /[0-9]/i.test(event.key)">
+							</div>
+							<div class="form-group" style="display:none" id="otp-ver">
+								<label>OTP for Verification to Change Email(Username) : </label>
+								<input class="form-control" type="password" name="otp" id="otp" onkeypress="return /[0-9]/i.test(event.key)">
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary" type="submit">UPDATE</button>
+								<a class="btn btn-warning" href="{%url 'user_profile_view'%}">CANCEL</a>
+							</div>
+						</div>
+					</form>
+
+				</div>
+				{%endif%}
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+<style>
+	.btn-edit a{color:black}
+</style>
+
+<script>
+function validateEditForm() {
+var first_name = document.getElementById("first_name").value;
+var last_name = document.getElementById("last_name").value;
+var email = document.getElementById("email").value;
+var contact = document.getElementById("contact").value;
+
+if (first_name.trim() === "") {
+    alert("First Name field Does not match requirements");
+    return false; // Prevent form submission
+}
+
+
+if (last_name.trim() === "") {
+    alert("Last Name field Does not match requirements");
+    return false; // Prevent form submission
+}
+
+if (contact.length > 10 || contact.length < 10 ){
+	alert("Contact field Does not match requirements");
+    return false; // Prevent form submission
+}
+
+
+return true; // Allow form submission
+}
+</script>
+
+<script>
+    function verifyEmail() {
+    	var otp_ver = document.getElementById("otp-ver");
+    	otp_ver.style.display = ""
+    	var otp_email = document.getElementById("email");
+    	otp_email.readOnly  = true;
+        var to_email = document.getElementById("email").value;
+        console.log("Email is "+to_email)
+        var url = "/verifyEmail";  // Update the URL if needed
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url + "?email=" + to_email, true);
+
+        xhr.send();
+    }
+</script>
+
+
+{%endblock%}
+
+

@@ -1,0 +1,73 @@
+{% extends "../store/main.html" %}
+{%load static%}
+{%block title%}Address{%endblock%}
+{%block body%}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container">
+	<div class="row">
+	{%include 'user/dashboard_sidenav.html'%}
+	<main class="col-md-9">
+        <a class="btn btn-primary" href="{%url 'user_address_add'%}">Add New Address</a>
+        {%for address in address_list%}
+		<article class="card" style="padding-top:10px">
+        <div class="container">
+            <div class="row">
+                <label>Name:</label>{{address.first_name}} {{address.last_name}}
+            </div>
+            <div class="row">
+                <label>Email:</label>{{address.email}}
+            </div>
+            <div class="row">
+                <label>Phone:</label>{{address.phone}}
+            </div>
+            <div class="row">
+                <label>Address 1:</label>{{address.address_line_1}}
+            </div>
+            <div class="row">
+                <label>Address 2:</label>{{address.address_line_2}}
+            </div>
+            <div class="row">
+                <label>City:</label>{{address.city}}
+            </div>
+            <div class="row">
+                <label>State:</label>{{address.state}}
+            </div>
+            <div class="row">
+                <label>Country:</label>{{address.country}}
+            </div>
+            <div class="row">
+                <label>PinCode:</label>{{address.pincode}}
+            </div>
+            <div class="row">
+                <a href="../user_address_edit?address_id={{address.id}}" class="btn btn-warning">Edit</a>&nbsp;
+                <a href="../user_address_delete?address_id={{address.id}}" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+
+		</article>
+        {%endfor%}
+	</main>
+</div>
+</div>
+
+
+</section>
+<style>
+	.settings-button{
+	border:2px solid #fc9803;
+	height:40px;
+	width:200px;
+	margin-top:50px;
+	}
+	.settings-button:hover{
+	background-color:#fc9803;
+	border:2px solid black;
+	height:40px;
+	width:200px;
+	margin-top:50px;
+	}
+
+</style>
+{%endblock%}

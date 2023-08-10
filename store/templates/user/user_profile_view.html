@@ -1,0 +1,42 @@
+{% extends "../store/main.html" %}
+{%load static%}
+{%block title%}User Profile{%endblock%}
+{%block body%}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container">
+	<div class="row">
+	{%include 'user/dashboard_sidenav.html'%}
+	<main class="col-md-9">
+		<article class="card container" style="padding:10px; padding-left:30px">
+            <div>
+				<div class="row">
+					<label>User Name : </label>{{user.username}}
+				</div>
+				<div class="row">
+					<label>Name : </label>{{user.first_name}} {{user.last_name}}
+				</div>
+				<div class="row">
+					<label>Email : </label>{{user.email}}
+				</div>
+				<div class="row">
+					<label>Contact : </label>{{u.contact}}
+				</div>
+				<div class="row">
+					<label>Date Joined : </label>{{user.date_joined}}
+				</div>
+            </div>
+				<div class="row">
+					<a class="btn btn-warning" href="{%url 'user_profile_edit'%}">EDIT</a>
+				</div>
+		</article>
+
+	</main>
+</div>
+</div>
+
+
+</section>
+
+{%endblock%}

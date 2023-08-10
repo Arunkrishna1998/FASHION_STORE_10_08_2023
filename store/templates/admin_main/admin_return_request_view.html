@@ -1,0 +1,70 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Coupons Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated %}
+<main>
+    <div class="container-fluid px-4">
+    <h1 class="mt-4">Return Request</h1>
+    <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Return</li>
+    </ol>
+        <div class="row">
+            <div class="container" >
+                <div class="row" style="text-align: center;">
+                    <div class="col-12">
+                        <article class="card">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                {%if return_items%}
+                                {%for item in return_items%}
+                                    <tr>
+                                        <td width="65">
+                                        <p class="title mb-0">ORDERNO: {{item.item.order.order_number}}</p>
+                                        </td>
+                                        <td width="65">
+                                        <p class="title mb-0">USER EMAIL: {{item.user.email}}</p>
+                                        </td>
+                                        <td width="65">
+                                        <img src="{{item.item.product.image.url}}" class="img-xs border">
+                                        </td>
+                                        <td>
+                                        <p class="title mb-0">{{item.item.product.product_name}} </p>
+                                        <var class="price text-muted">{{item.product_price}}</var>
+                                        </td>
+                                        <td> {{item.item.color}}-{{item.item.size}} <br> Quantity: {{item.item.quantity}} </td>
+                                        <td>{{item.moreinfo}}</td>
+                                        <td> STATUS : {{item.status}}</td>
+                                        <td>
+                                        <form method="post" action="{%url 'admin_return_request_update' item_id=item.id%}">
+                                        {%csrf_token%}
+                                        <select id="mySelect" name="status-{{item.id}}" required>
+                                        <option value="0" disabled selected>Update Status</option>
+                                        <option value="Accepted">Accepted</option>
+                                        <option value="Rejected">Rejected</option>
+                                        </select>
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-thumbs-up"></i></button>
+                                        </form>
+                                        </td>
+                                    </tr>
+                                {%endfor%}
+                                {%else%}
+                                <h3>No Data to Display</h3>
+                                {%endif%}
+                                </table>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<style>
+.img-xs{width:100%}
+</style>
+{%endif%}
+{%endblock%}
+
+
+

@@ -1,0 +1,10 @@
+	<div class="item-option-select">
+<!--			<label for="size_id">Select Size</label>-->
+                <select  name="size_id" id="size_id" class="form-control" onchange="loadPrice()" required>
+                    <option value="" disabled selected>Select Size</option>
+                    {% for s in size_list%}
+                        <option value="{{s.uid}}">{{s.size}}</option>
+                    {% endfor %}
+                </select>
+		</div>
+

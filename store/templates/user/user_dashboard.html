@@ -1,0 +1,108 @@
+{% extends "../store/main.html" %}
+{%load static%}
+{%block title%}Dashboard{%endblock%}
+{%block body%}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container">
+	<div class="row">
+<!--	<aside class="col-md-3">-->
+<!--		&lt;!&ndash;   SIDEBAR   &ndash;&gt;-->
+<!--		<ul class="list-group">-->
+<!--			<a class="list-group-item active" href="{%url 'user_dashboard'%}"> My order history </a>-->
+<!--			<a class="list-group-item" href="#"> Transactions </a>-->
+<!--			<a class="list-group-item" href="#"> Return and refunds </a>-->
+<!--			<a class="list-group-item" href="/user_settings">Settings </a>-->
+<!--			<a class="list-group-item" href="#"> My Selling Items </a>-->
+<!--			<a class="list-group-item" href="#"> Received orders </a>-->
+<!--		</ul>-->
+<!--		<br>-->
+<!--		<a class="btn btn-light btn-block" href="/customer_logout"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a>-->
+<!--		&lt;!&ndash;   SIDEBAR .//END   &ndash;&gt;-->
+<!--	</aside>-->
+		{%include 'user/dashboard_sidenav.html'%}
+	<main class="col-md-9">
+		{%for order in orders%}
+		<a href="{%url 'order_details' orderno=order.id%}">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Order ID: {{order.order_number}}</strong>
+			<span>Order Date: {{order.created_at}}</span>
+		</header>
+
+
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-4">
+					<h6 class="text-muted">Delivery to</h6>
+					<p>{{order.first_name}} {{order.last_name}} <br>
+					Phone {{order.phone}} Email: {{order.email}} <br>
+			    	Location: {{order.address_line_1}},{{order.city}} , {{order.state}},  {{order.country}}, <br>
+			    	P.O. Box: {{order.pincode}}
+			 		</p>
+				</div>
+				<div class="col-md-4">
+					<h6 class="text-muted">Payment</h6>
+					{{order.payment.payment_method}}
+<!--					<span class="text-success">-->
+<!--						<i class="fab fa-lg fa-cc-visa"></i>-->
+<!--					    Visa  **** 4216  -->
+<!--					</span>-->
+<!--					<p>Subtotal: $356 <br>-->
+<!--					 Shipping fee:  $56 <br> -->
+<!--					 <span class="b">Total:  $456 </span>-->
+<!--					</p>-->
+				</div>
+				<div class="col-md-4">
+					<h6 class="text-muted">Status</h6>
+					<span style="color:black">{{order.status}}</span>
+
+				</div>
+
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+
+
+
+
+
+
+
+
+<!--&lt;!&ndash;			<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td>&ndash;&gt;-->
+<!--&lt;!&ndash;					<img src="../images/items/2.jpg" class="img-xs border">&ndash;&gt;-->
+<!--&lt;!&ndash;				</td>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td> &ndash;&gt;-->
+<!--&lt;!&ndash;					<p class="title mb-0">Another name goes here </p>&ndash;&gt;-->
+<!--&lt;!&ndash;					<var class="price text-muted">USD 15</var>&ndash;&gt;-->
+<!--&lt;!&ndash;				</td>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td> Seller <br> ABC shop </td>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>&ndash;&gt;-->
+<!--&lt;!&ndash;			</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;			<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td>&ndash;&gt;-->
+<!--&lt;!&ndash;					<img src="../images/items/3.jpg" class="img-xs border">&ndash;&gt;-->
+<!--&lt;!&ndash;				</td>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td> &ndash;&gt;-->
+<!--&lt;!&ndash;					<p class="title mb-0">The name of the product  goes here </p>&ndash;&gt;-->
+<!--&lt;!&ndash;					<var class="price text-muted">USD 145</var>&ndash;&gt;-->
+<!--&lt;!&ndash;				</td>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td> Seller <br> Wallmart </td>&ndash;&gt;-->
+<!--&lt;!&ndash;				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>&ndash;&gt;-->
+<!--&lt;!&ndash;			</tr>&ndash;&gt;-->
+<!--		</table>-->
+<!--		</div> &lt;!&ndash; table-responsive .end// &ndash;&gt;-->
+		</article>
+		</a>
+		{%endfor%}
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+{%endblock%}

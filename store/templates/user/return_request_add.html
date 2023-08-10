@@ -1,0 +1,47 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Fashion Store{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container" >
+            <div class="row" style="text-align: center;">
+                <div class="col-6">
+                     <article class="card">
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tr>
+                        <td width="65">
+                        <img src="{{item.product.image.url}}" class="img-xs border">
+                        </td>
+                        <td>
+                        <p class="title mb-0">{{item.product.product_name}} </p>
+                        <var class="price text-muted">{{item.product_price}}</var>
+                        </td>
+                        <td> {{item.color}}-{{item.size}} <br> Quantity: {{item.quantity}} </td>
+                        </tr>
+                    </table>
+                    </div>
+                    </article>
+                </div>
+                <div class="clo-6">
+                    <form action="{%url 'return_request_add' item_id=item.id%}" method="post">
+                    {%csrf_token%}
+                    <input type="hidden" name="item_id" value="{{item.id}}">
+                        <div class="col">
+                          <textarea name="moreinfo" style="width:200px;height:100px;" required></textarea>
+                        </div>
+                        <div class="col">
+                            <button type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+    </section>
+    <!-- Shoping Cart Section End -->
+{%endblock%}

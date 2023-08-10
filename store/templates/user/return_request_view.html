@@ -1,0 +1,36 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Fashion Store{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container" >
+            <div class="row" style="text-align: center;">
+                <div class="col-12">
+                     <article class="card">
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        {%for item in return_items%}
+                        <tr>
+                        <td width="65">
+                        <img src="{{item.item.product.image.url}}" class="img-xs border">
+                        </td>
+                        <td>
+                        <p class="title mb-0">{{item.item.product.product_name}} </p>
+                        <var class="price text-muted">{{item.product_price}}</var>
+                        </td>
+                        <td> {{item.item.color}}-{{item.item.size}} <br> Quantity: {{item.item.quantity}} </td>
+                         <td> STATUS : {{item.status}}</td>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                    </div>
+                    </article>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+{%endblock%}

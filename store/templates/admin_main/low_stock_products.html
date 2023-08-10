@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Low Stock Products</title>
+</head>
+<body>
+    <h1>Low Stock Products</h1>
+
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Color</th>
+            <th>Size</th>
+            <th>Action</th>
+        </tr>
+        {% for item in low_stock_items %}
+        <tr>
+            <td>{{ item.product_id.product_name }}</td>
+            <td>{{ item.Color_id.color }}</td>
+            <td>{{ item.size }}</td>
+            <td><a href="{%url 'product_variants_stock_update' size_id=item.uid product_id=item.product_id.uid%}">Update</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

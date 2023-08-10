@@ -1,0 +1,76 @@
+{% extends "../store/main.html" %}
+{%load static%}
+{%block title%}User Profile Update{%endblock%}
+{%block body%}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container">
+	<div class="row">
+	{%include 'user/dashboard_sidenav.html'%}
+	<main class="col-md-9">
+		<article class="card container" style="padding:10px; padding-left:30px">
+			<form action="{%url 'user_profile_edit'%}" method="post">
+				{% csrf_token %}
+            <div>
+				<div class="form-group">
+					<label>User Name : </label>
+					<input class="form-control" value="{{user.username}}" readonly>
+				</div>
+				<div class="form-group">
+					<label>First Name1 : </label>
+					<input id="first_name" class="form-control" value="{{user.first_name}}" name="first_name" onkeypress="return /[a-z A-Z]/i.test(event.key)">
+				</div>
+				<div class="form-group">
+					<label>Last Name : </label>
+					<input id="last_name" class="form-control" value="{{user.last_name}}" name="last_name" onkeypress="return /[a-z A-Z]/i.test(event.key)">
+				</div>
+				<div class="form-group">
+					<label>Email : </label>
+					<input class="form-control" value="{{user.email}}" name="email" required type="email">
+				</div>
+				<div class="form-group">
+					<label>Contact : </label>
+					<input class="form-control" value="{{u.contact}}" name="contact" required>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-primary" type="submit">UPDATE</button>
+					<a class="btn btn-warning" href="{%url 'user_profile_view'%}">CANCEL</a>
+				</div>
+            </div>
+			</form>
+		</article>
+
+	</main>
+</div>
+</div>
+
+
+</section>
+<script>
+function validateEditForm() {
+var productname = document.getElementById("productname").value;
+var product_description = document.getElementById("product_description").value;
+
+var productPriceInput = document.getElementById("productprice");
+var productPriceValue = parseFloat(productPriceInput.value);
+
+if (isNaN(productPriceValue) || productPriceValue <= 0) {
+    alert("Product price must be a valid positive number.");
+    return false; // Prevent form submission
+}
+
+if (product_description.trim() === "") {
+alert("Only white spaces in Description.");
+return false; // Prevent form submission
+}
+
+
+if (productname.trim() === "") {
+alert("Only white spaces in Product Name.");
+return false; // Prevent form submission
+}
+return true; // Allow form submission
+}
+</script>
+{%endblock%}

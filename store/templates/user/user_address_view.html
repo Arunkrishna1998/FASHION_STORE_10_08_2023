@@ -1,0 +1,337 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Fashion Store{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    {%for address in address_list%}
+                    <article class="card">
+                   <div class="row">
+                        <div class="col-lg-8">
+                        <address>
+                            {{address.first_name}} {{address.last_name}}<br>
+                            Email: {{address.email}}<br>
+                            Mobile: {{address.phone}}<br>
+                            Address:{{address.address_line_1}}, {{address.address_line_2}},<br>
+                            {{address.city}}, {{address.state}}, {{address.pincode}}
+                        </address>
+                            <a href="../user_address_edit?address_id={{address.id}}" class="btn btn-warning">Edit</a>&nbsp;
+                            <a href="../user_address_delete?address_id={{address.id}}" class="btn btn-danger"
+							onclick="return confirm('Are you sure you want to Delete this Address?')">Delete</a>
+                        </div>
+                   </div>
+
+
+                    </article>
+                    {%endfor%}
+
+                </div>
+                <div class="col-lg-6">
+					{%if edit%}
+					<form action="{%url 'user_address_edit'%}" method="post" onsubmit="return validateEditForm()">
+        				<div class="container">
+						   <aside class="col-lg-12">
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title mb-4">Edit Address</h4>
+										{% csrf_token %}
+										<div class="form-row">
+											<div class="col form-group">
+												<label >First Name</label>
+												<input type="text" name="first_name" id="first_name_1" class="form-control" value="{{address.first_name}}" onkeypress="return /[a-z A-Z]/i.test(event.key)" required>
+											</div>
+											<div class="col form-group">
+												<label >Last Name</label>
+												<input type="text" name="last_name" id="last_name_1" class="form-control" value="{{address.last_name}}" onkeypress="return /[a-z A-Z]/i.test(event.key)" required>
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >Email*</label>
+												<input type="email" name="email" id="email_1" class="form-control" value="{{address.email}}" required>
+											</div>
+											<div class="col form-group">
+												<label >Phone Number</label>
+												<input type="text" name="phone" id="phone_1" class="form-control" value="{{address.phone}}" onkeypress="return /[0-9]/i.test(event.key)" required>
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >Address 1</label>
+												<input type="text" name="address_line_1" id="address_line_1_1" class="form-control" value="{{address.address_line_1}}" required>
+											</div>
+											<div class="col form-group">
+												<label >Address 2</label>
+												<input type="text" name="address_line_2" id="address_line_2_1" value="{{address.address_line_2}}" class="form-control" >
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >City*</label>
+												<input type="text" name="city" id="city_1" class="form-control" value="{{address.city}}" required>
+											</div>
+											<div class="col form-group">
+												<label >State</label>
+												<input type="text" name="state" id="state_1" class="form-control" value="{{address.state}}" required>
+											</div>
+											<div class="col form-group">
+												<label >Country</label>
+												<input type="text" name="country" id="country_1" class="form-control" value="{{address.country}}" required>
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >Pincode*</label>
+												<input type="text" name="pincode" id="pincode_1" class="form-control" value="{{address.pincode}}" onkeypress="return /[0-9]/i.test(event.key)" required>
+											</div>
+										</div>
+										<input name="address_id" value="{{address.id}}" type="hidden">
+										<div class="form-row">
+											<div class="col form-group">
+												<button type="submit" class="btn btn-primary">Save</button>
+												<button type="reset" class="btn btn-warning">Reset</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</aside>
+        				</div>
+					</form>
+
+					{%else%}
+					 <form action="{%url 'user_address_add'%}" method="post" onsubmit="return validateAddForm()">
+						<div class="container">
+						   <aside class="col-lg-12">
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title mb-4">Address</h4>
+										{% csrf_token %}
+										<div class="form-row">
+											<div class="col form-group">
+												<label >First Name</label>
+												<input type="text" name="first_name" id="first_name" class="form-control" required onkeypress="return /[a-z A-Z]/i.test(event.key)">
+											</div>
+											<div class="col form-group">
+												<label >Last Name</label>
+												<input type="text" name="last_name" id="last_name" class="form-control" required onkeypress="return /[a-z A-Z]/i.test(event.key)">
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >Email*</label>
+												<input type="email" name="email" class="form-control" required>
+											</div>
+											<div class="col form-group">
+												<label >Phone Number</label>
+												<input type="text" name="phone" id="phone" class="form-control" onkeypress="return /[0-9]/i.test(event.key)" required>
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >Address 1</label>
+												<input type="text" name="address_line_1" id="address_line_1" class="form-control" required>
+											</div>
+											<div class="col form-group">
+												<label >Address 2</label>
+												<input type="text" name="address_line_2" id="address_line_2" class="form-control" required>
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >City*</label>
+												<input type="text" name="city" id="city" class="form-control" required>
+											</div>
+											<div class="col form-group">
+												<label >State</label>
+												<input type="text" name="state" id="state" class="form-control" required>
+											</div>
+											<div class="col form-group">
+												<label >Country</label>
+												<input type="text" name="country" id="country" class="form-control" required>
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="col form-group">
+												<label >Pincode*</label>
+												<input type="text" name="pincode" id="pincode"  class="form-control" required onkeypress="return /[0-9]/i.test(event.key)">
+											</div>
+										</div>
+
+										<div class="form-row">
+											<div class="col form-group">
+												<button type="submit" class="btn btn-primary">Save</button>
+												<button type="reset" class="btn btn-warning">Reset</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</aside>
+						</div>
+					</form>
+					{%endif%}
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+
+
+
+<script>
+function validateAddForm() {
+var first_name = document.getElementById("first_name").value;
+var last_name = document.getElementById("last_name").value;
+var address_line_1 = document.getElementById("address_line_1").value;
+var address_line_2 = document.getElementById("address_line_2").value;
+var city = document.getElementById("city").value;
+var state = document.getElementById("state").value;
+var country = document.getElementById("country").value;
+
+var pincodeInput = document.getElementById("pincode");
+var phoneInput = document.getElementById("phone");
+
+var pincode = parseInt(pincodeInput.value);
+var phone = parseInt(phoneInput.value);
+
+//alert("Pincode Length = " + pincode.toString().length + " Phone Length = " + phone.toString().length);
+
+
+if (first_name.trim() === "") {
+alert("Only white spaces in First Name.");
+return false; // Prevent form submission
+}
+
+if (last_name.trim() === "") {
+alert("Only white spaces in Last Name.");
+return false; // Prevent form submission
+}
+
+if (last_name.trim() === "") {
+alert("Only white spaces in Last Name.");
+return false; // Prevent form submission
+}
+
+if (phone.toString().length < 10 || phone.toString().length >10) {
+alert("Enter Valid Phone Number");
+return false; // Prevent form submission
+}
+
+if (address_line_1.trim() === "") {
+alert("Only white spaces in Address 1.");
+return false; // Prevent form submission
+}
+
+if (address_line_2.trim() === "") {
+alert("Only white spaces in Address 2.");
+return false; // Prevent form submission
+}
+
+if (city.trim() === "") {
+alert("Only white spaces in City.");
+return false; // Prevent form submission
+}
+
+if (country.trim() === "") {
+alert("Only white spaces in Country.");
+return false; // Prevent form submission
+}
+
+if (state.trim() === "") {
+alert("Only white spaces in State.");
+return false; // Prevent form submission
+}
+
+
+if (pincode.toString().length < 6 || pincode.toString().length >6) {
+alert("Enter Valid PIN Number");
+return false; // Prevent form submission
+}
+
+return true; // Allow form submission
+}
+</script>
+
+<script>
+function validateEditForm() {
+var first_name = document.getElementById("first_name_1").value;
+var last_name = document.getElementById("last_name_1").value;
+var address_line_1 = document.getElementById("address_line_1_1").value;
+var address_line_2 = document.getElementById("address_line_2_1").value;
+var city = document.getElementById("city_1").value;
+var state = document.getElementById("state_1").value;
+var country = document.getElementById("country_1").value;
+
+var pincodeInput = document.getElementById("pincode_1");
+var phoneInput = document.getElementById("phone_1");
+
+var pincode = parseInt(pincodeInput.value);
+var phone = parseInt(phoneInput.value);
+
+//alert("Pincode Length = " + pincode.toString().length + " Phone Length = " + phone.toString().length);
+
+
+if (first_name.trim() === "") {
+alert("Only white spaces in First Name.");
+return false; // Prevent form submission
+}
+
+if (last_name.trim() === "") {
+alert("Only white spaces in Last Name.");
+return false; // Prevent form submission
+}
+
+if (last_name.trim() === "") {
+alert("Only white spaces in Last Name.");
+return false; // Prevent form submission
+}
+
+if (phone.toString().length < 10 || phone.toString().length >10) {
+alert("Enter Valid Phone Number");
+return false; // Prevent form submission
+}
+
+if (address_line_1.trim() === "") {
+alert("Only white spaces in Address 1.");
+return false; // Prevent form submission
+}
+
+if (address_line_2.trim() === "") {
+alert("Only white spaces in Address 2.");
+return false; // Prevent form submission
+}
+
+if (city.trim() === "") {
+alert("Only white spaces in City.");
+return false; // Prevent form submission
+}
+
+if (country.trim() === "") {
+alert("Only white spaces in Country.");
+return false; // Prevent form submission
+}
+
+if (state.trim() === "") {
+alert("Only white spaces in State.");
+return false; // Prevent form submission
+}
+
+
+if (pincode.toString().length < 6 || pincode.toString().length >6) {
+alert("Enter Valid PIN Number");
+return false; // Prevent form submission
+}
+
+return true; // Allow form submission
+}
+</script>
+{%endblock%}

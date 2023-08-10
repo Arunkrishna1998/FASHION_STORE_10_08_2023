@@ -1,0 +1,49 @@
+{% extends "../store/base.html" %}
+{%load static%}
+{%block title%}Wish List{%endblock%}
+{%block body%}
+<section class="section-conten padding-y bg">
+<div class="container">
+<table class="table-content">
+            <thead>
+            <tr>
+              	<th>Payment ID</th>
+				<th>Order Number</th>
+				<th>Method</th>
+<!--				<th>Amount</th>-->
+				<th>Status</th>
+				<th>Date</th>
+				<th>Action</th>
+            </tr>
+            </thead>
+			  {%for tl in transaction_list%}
+			<tbody>
+            <tr>
+              	<td>{{tl.payment_id}}</td>
+				<td>{{tl.order_number}}</td>
+				<td>{{tl.payment_method}}</td>
+<!--				<td>{{tl.amount_payed}}</td>-->
+				<td>{{tl.status}}</td>
+				<td>{{tl.created_at}}</td>
+				<td>
+					{%if tl.payment_method == 'cod' %}
+					{%else%}
+					<a href="../order_complete?payment_id={{tl.payment_id}}&order_number={{tl.order_number}}">invoice</a>
+					{%endif%}
+
+				</td>
+            </tr>
+            </tbody>
+			  {%endfor%}
+            
+          </table>
+</div>
+</section>
+
+<style>
+	.table-content, th, td {
+  border: 1px solid;
+}
+.table-content{width:100%;}
+</style>
+{%endblock%}

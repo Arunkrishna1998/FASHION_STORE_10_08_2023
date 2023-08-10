@@ -1,0 +1,109 @@
+{% extends "../store/main.html" %}
+{%load static%}
+{%block title%}Address{%endblock%}
+{%block body%}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container">
+	<div class="row">
+	{%include 'user/dashboard_sidenav.html'%}
+	<main class="col-md-9">
+<!--        <a class="btn btn-primary" href="{%url 'user_address_add'%}">Add New Address</a>-->
+		<form action="{%url 'user_address_add'%}" method="post">
+		<article class="card" style="padding-top:10px">
+        <div class="container">
+           <aside class="col-lg-6">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title mb-4">Address</h4>
+						{% csrf_token %}
+						<div class="form-row">
+							<div class="col form-group">
+								<label >First Name</label>
+								<input type="text" name="first_name" class="form-control" required>
+							</div>
+							<div class="col form-group">
+								<label >Last Name</label>
+								<input type="text" name="last_name" class="form-control" required>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col form-group">
+								<label >Email*</label>
+								<input type="email" name="email" class="form-control" required>
+							</div>
+							<div class="col form-group">
+								<label >Phone Number</label>
+								<input type="text" name="phone" class="form-control" required>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col form-group">
+								<label >Address 1</label>
+								<input type="text" name="address_line_1" class="form-control" required>
+							</div>
+							<div class="col form-group">
+								<label >Address 2</label>
+								<input type="text" name="address_line_2" class="form-control" >
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col form-group">
+								<label >City*</label>
+								<input type="text" name="city" class="form-control" required>
+							</div>
+							<div class="col form-group">
+								<label >State</label>
+								<input type="text" name="state" class="form-control" required>
+							</div>
+							<div class="col form-group">
+								<label >Country</label>
+								<input type="text" name="country" class="form-control" required>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col form-group">
+								<label >Pincode*</label>
+								<input type="text" name="pincode" class="form-control" required>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="col form-group">
+								<button type="submit" class="btn btn-primary">Save</button>
+								<button type="reset" class="btn btn-warning">Reset</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</aside>
+        </div>
+		</article>
+		</form>
+
+	</main>
+</div>
+</div>
+
+
+</section>
+<style>
+	.settings-button{
+	border:2px solid #fc9803;
+	height:40px;
+	width:200px;
+	margin-top:50px;
+	}
+	.settings-button:hover{
+	background-color:#fc9803;
+	border:2px solid black;
+	height:40px;
+	width:200px;
+	margin-top:50px;
+	}
+
+</style>
+{%endblock%}
+

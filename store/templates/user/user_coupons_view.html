@@ -1,0 +1,77 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Dashboard Fashion Store{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 " style="text-align:center;">
+                <h2>Offers</h2>
+                    <div class="coupons-container">
+                    {%for coupon in coupons%}
+                    <div class="coupon">
+                      <div class="container">
+<!--                        <h3>Company Logo</h3>-->
+                      </div>
+                      <div class="container" style="background-color:white">
+                          {%if coupon.coupon_type == 'moneytowallet' %}
+                          <h5><b>GET {{coupon.amount}} TO YOUR WALLET</b></h5>
+                          {%else%}
+                          <h5><b>GET {{coupon.amount}} OFF ON PURCHASES ABOVE {{coupon.MinPurchase}}</b></h5>
+                          {%endif%}
+
+                        <p>{{coupon.coupon_type}}</p>
+                      </div>
+                      <div class="container">
+                        <p>Use Promo Code: <span class="promo">{{coupon.coupon_code}}</span></p>
+                        <p class="expire">Expires: {{coupon.ExpDate}}</p>
+                      </div>
+                    </div>
+                    {%endfor%}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+<style>
+    .coupon {
+  border: 5px dotted #bbb; /* Dotted border */
+  width: 100%;
+  height:200px;
+  border-radius: 15px; /* Rounded border */
+  margin: 0 auto; /* Center the coupon */
+  max-width: 600px;
+  padding-top:20px;
+}
+
+.container {
+  padding: 2px 16px;
+  background-color: #f1f1f1;
+}
+
+.promo {
+  background: #ccc;
+  padding: 3px;
+}
+
+.expire {
+  color: red;
+}
+
+.coupons-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Display 4 items in each row */
+    gap: 20px; /* Set the gap between items */
+}
+</style>
+{%endblock%}

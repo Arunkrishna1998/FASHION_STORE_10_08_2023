@@ -1,0 +1,169 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Coupons Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated %}
+
+
+
+<main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Coupons/Offers</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Coupons</li>
+                        </ol>
+
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+
+                                    {% if edit%}
+                                    <h4>Update Coupon</h4>
+                                    <form action="{%url 'admin_coupons_update'%}" method="post">
+                                    {% csrf_token %}
+                                        <input type="hidden" name="coupon_id" value="{{coupon.id}}">
+                                        <label for="coupon_code">Coupon Code</label>
+                                        <input type="text" id="coupon_code_1" class="form-control" name="coupon_code" value="{{coupon.coupon_code}}" required>
+                                        <label for="MinPurchase">Minimum Purchase</label>
+                                        <input type="text" id="MinPurchase_1" class="form-control" name="MinPurchase" value="{{coupon.MinPurchase}}" required>
+                                        <label for="ExpDate">Expiry Date </label>
+                                        <input type="date" id="ExpDate_1" class="form-control" name="ExpDate" value="{{coupon.expiry_date}}" required>
+
+                                        <label for="amount">Amount</label>
+                                        <input type="text" id="amount_1" class="form-control" name="amount" value="{{coupon.amount}}" required>
+
+                                        <label for="coupon_type-2">Coupon Type</label>
+                                        <select class="form-control" id="exampleFormControlSelect2" name="coupon_type" id="coupon_type-2" required>
+                                        <option value="{{coupon.coupon_type}}">{%if coupon.coupon_type == 'discount'%}Discount{%else%}Money To Wallet{%endif%}</option>
+                                        <option value="discount">Discount</option>
+                                        <option value="moneytowallet">Money To Wallet</option>
+                                        </select>
+
+                                        <div style="float:right;padding-top:10px;">
+                                            <button class="btn btn-success" type="submit">Update</button>
+                                            <a class="btn btn-warning" href="{%url 'admin_coupons_view'%}">Cancel</a>
+                                        </div>
+
+                                    </form>
+                                    {%else%}
+                                    <h4>Add New Coupon</h4>
+                                    <form action="{%url 'admin_coupons_add'%}" method="post">
+                                    {% csrf_token %}
+
+                                        <label for="coupon_code">Coupon Code</label>
+                                        <input type="text" id="coupon_code" class="form-control" name="coupon_code" placeholder="Coupon Code" required>
+                                        <label for="MinPurchase">Minimum Purchase</label>
+                                        <input type="text" id="MinPurchase" class="form-control" name="MinPurchase" placeholder="Minimum Purchase" value="0" required>
+                                        <label for="ExpDate">Expiry Date</label>
+                                        <input type="date" id="ExpDate" class="form-control" name="ExpDate" placeholder="Exp-Date" required>
+                                        <label for="amount">Amount</label>
+                                        <input type="text" id="amount" class="form-control" name="amount" placeholder="Amount" required>
+                                        <label for="coupon_type">Coupon Type</label>
+                                        <select class="form-control" id="exampleFormControlSelect1" name="coupon_type" id="coupon_type" required>
+                                        <option disabled>Select Type</option>
+                                        <option value="discount">Discount</option>
+                                        <option value="moneytowallet">Money To Wallet</option>
+                                        </select>
+
+                                        <div style="float:right;padding-top:10px;">
+                                            <button class="btn btn-success" type="submit">Submit</button>
+                                            <button class="btn btn-warning" type="reset">Reset</button>
+                                        </div>
+
+                                    </form>
+
+                                    {%endif%}
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Coupon Details
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>Coupon Code</th>
+                                            <th>Minimum Purchase</th>
+                                            <th>Expiry Date</th>
+                                            <th>Amount</th>
+                                            <th>Coupon Type</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Coupon Code</th>
+                                            <th>Minimum Purchase</th>
+                                            <th>Expiry Date</th>
+                                            <th>Amount</th>
+                                            <th>Coupon Type</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                    {%for coupon in coupons_list%}
+                                    <tr>
+                                        <td>{{coupon.coupon_code}}</td>
+                                        <td>{{coupon.MinPurchase}}</td>
+                                        <td>{{coupon.ExpDate}}</td>
+                                        <td>{{coupon.amount}}</td>
+                                        <td>{{coupon.coupon_type}}</td>
+                                        <td>{{coupon.check_expired}}</td>
+
+                                        <td>
+                                            <a class="btn btn-warning" href="../admin_coupons_update?coupon_id={{coupon.id}}">Edit</a>
+
+
+                                            <a class="btn btn-danger" href="../admin_coupons_delete?coupon_id={{coupon.id}}" onclick="return confirm('Are You Sure You want to Delete this Coupon?')">Delete</a>
+
+                                        </td>
+                                    </tr>
+                                    {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </main>
+
+
+
+<!--<script>-->
+<!--const expDateInput = document.getElementById("ExpDate_1");-->
+<!--const currentDate = new Date().toISOString().split('T')[0];-->
+<!--expDateInput.setAttribute("min", currentDate);-->
+
+<!--const expDateInput1 = document.getElementById("ExpDate");-->
+<!--expDateInput1.setAttribute("min", currentDate);-->
+
+<!--</script>-->
+    <script>
+        const expDateInputs = document.querySelectorAll('input[type="date"]');
+
+        // Get the current date in the format "YYYY-MM-DD"
+        const currentDate = new Date().toISOString().split('T')[0];
+
+        // Set the "min" attribute of all date inputs to the current date
+        expDateInputs.forEach(input => {
+            input.setAttribute("min", currentDate);
+        });
+    </script>
+
+
+
+
+{%endif%}
+
+{%endblock%}
+
+
+

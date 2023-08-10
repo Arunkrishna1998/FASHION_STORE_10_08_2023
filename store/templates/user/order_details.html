@@ -1,0 +1,53 @@
+{% extends "../store/base.html" %}
+{%load static%}
+{%block title%}Dashboard{%endblock%}
+{%block body%}
+<section class="section-conten padding-y bg">
+<div class="container">
+	<aside class="row">
+		<main class="col-md-12">
+		<article class="card">
+			<div class="table-responsive">
+			<table class="table table-hover">
+				{%for item in order_product_list%}
+				<tr>
+				<td width="65">
+				<img src="{{item.product.image.url}}" class="img-xs border">
+				</td>
+				<td>
+				<p class="title mb-0">{{item.product.product_name}} </p>
+				<var class="price text-muted">{{item.product_price}}</var>
+				</td>
+				<td> {{item.color}}-{{item.size}} <br> Quantity: {{item.quantity}} </td>
+				<td width="250">
+					{%if order.status == 'Completed' %}
+					<a class="btn btn-danger" href="{%url 'return_request_add' item_id=item.id%}" onclick="return confirm('Are you sure you want to Return this Item?')">Return</a>
+					{%endif%}
+					<a href="{%url 'product_details' product_id=item.product.uid %}" class="btn btn-light"> View Product </a>
+				</td>
+				</tr>
+				{%endfor%}
+			</table>
+			</div>
+			<aside class="col-md-4">
+			 <div class="btn-group">
+<!--			 <a href="#" class="btn btn-outline-primary">Track order</a>-->
+			{%if order.status != 'Completed' %}
+			 {%if order.payment.status%}
+			 {%else%}
+			 <a href="{%url 'payments' orderno=orderno%}" class="btn btn-outline-warning">Pay</a>
+			 {%endif%}
+			{%endif%}
+			{%if order.status == 'Completed' %}
+			{% else %}
+			 <a href="{%url 'cancel_order' orderno%}" class="btn btn-outline-danger"
+				onclick="return confirm('Are you sure you want to Cancel this Order?')">Cancel</a>
+			{% endif %}
+			 </div>
+			</aside>
+		</article>
+		</main>
+	</aside>
+</div>
+</section>
+{%endblock%}

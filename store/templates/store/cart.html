@@ -1,0 +1,128 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{%block title%}Cart{%endblock%}
+{% block body %}
+<div class="row">
+	<aside class="col-lg-9">
+<div class="card">
+<table class="table table-borderless table-shopping-cart">
+<thead class="text-muted">
+<tr class="small text-uppercase">
+  <th scope="col">Product</th>
+  <th scope="col" width="120">Quantity</th>
+  <th scope="col" width="120">Price</th>
+  <th scope="col" class="text-right" width="200"> </th>
+</tr>
+</thead>
+<tbody>
+{%for cart_item in cart_items%}
+<tr>
+	<td>
+		<figure class="itemside align-items-center">
+			<div class="aside"><img src="{{cart_item.product.image.url}}" class="img-sm"></div>
+			<figcaption class="info">
+				<a href="#" class="title text-dark">{{cart_item.product.product_name}}</a>
+				<p class="text-muted small">{{cart_item.product.category.category_name}} <br>
+
+					{{cart_item.product_variant.Color_id.color}},{{cart_item.product_variant.size}}
+				</p>
+			</figcaption>
+		</figure>
+	</td>
+	<td>
+		<!-- col.// -->
+					<div class="col">
+						<div class="input-group input-spinner">
+							<div class="input-group-prepend">
+							<a href="{% url 'remove_from_cart_1' %}?product_id={{ cart_item.product.uid }}&size_id={{ cart_item.product_variant.uid }}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
+							</div>
+							<input type="text" class="form-control"  value="{{cart_item.quantity}}">
+							<div class="input-group-append">
+							<a href="{% url 'add_to_cart_1' %}?product_id={{ cart_item.product.uid }}&size_id={{ cart_item.product_variant.uid }}" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </a>
+							</div>
+						</div> <!-- input-group.// -->
+					</div> <!-- col.// -->
+	</td>
+	<td>
+		<div class="price-wrap">
+			<var class="price">₹{{ cart_item.sub_total }}</var>
+			<small class="text-muted"> ₹{{cart_item.product_variant.price}} </small>
+		</div> <!-- price-wrap .// -->
+	</td>
+	<td class="text-right">
+	<a href="{% url 'remove_from_cart' %}?product_id={{ cart_item.product.uid }}&size_id={{ cart_item.product_variant.uid }}" class="btn btn-danger"> Remove</a>
+	</td>
+</tr>
+{%endfor%}
+
+
+
+
+</tbody>
+</table>
+</div> <!-- card.// -->
+
+	</aside> <!-- col.// -->
+	<aside class="col-lg-3">
+
+		<div class="card">
+		<div class="card-body">
+			<dl class="dlist-align">
+			  <dt>Total price:</dt>
+			  <dd class="text-right">₹{{total}}</dd>
+			</dl>
+			<dl class="dlist-align">
+			  <dt>Tax:</dt>
+			  <dd class="text-right"> ₹{{tax}}</dd>
+			</dl>
+			<dl class="dlist-align">
+			  <dt>Total(Including Tax):</dt>
+			  <dd class="text-right text-dark b"><strong>₹{{grant_total}}</strong></dd>
+			</dl>
+			<hr>
+			<p class="text-center mb-3">
+				<img src="{%static 'images_1/misc/payments.png'%}" height="26">
+			</p>
+			{% if grant_total == 0 %}
+			<a href="#" class="btn btn-primary btn-block" onclick="alert('Your Cart is Empty!')"> Checkout </a>
+			{%else%}
+			<a href="/checkout" class="btn btn-primary btn-block"> Checkout </a>
+			{%endif%}
+			<a href="{%url 'view_store'%}" class="btn btn-light btn-block">Continue Shopping</a>
+		</div> <!-- card-body.// -->
+		</div> <!-- card.// -->
+
+</aside> <!-- col.// -->
+
+
+</div> <!-- row.// -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    // Prevent default link navigation and handle the click event
+    $('#button-add-to-cart').on('click', function(e) {
+      e.preventDefault(); // Prevent the default link navigation
+
+      // Get the link's URL
+      var url = $(this).attr('href');
+
+      // Send the AJAX request
+      $.ajax({
+        type: 'GET', // Change this to 'POST' or other HTTP methods as needed
+        url: url,
+        success: function() {
+          // Handle the successful response, if needed
+          console.log('Item added to cart!');
+        },
+        error: function() {
+          // Handle the error case, if needed
+          console.error('Error adding item to cart.');
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock  %}

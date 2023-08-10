@@ -1,0 +1,304 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Product Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated and user.is_staff%}
+
+<main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Update Product</h1>
+
+<div class="container" style="width:70%">
+    <form action="{% url 'admin_product_update' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="id" value="{{product.uid}}">
+        <div class="form-group">
+        <label for="productname">Product Name</label>
+        <input type="text" class="form-control" name="productname" id="productname" value="{{product.product_name}}">
+        </div>
+        <div class="form-group">
+        <label for="productprice">Product Price</label>
+        <input type="text" class="form-control" name="productprice" id="productprice" value="{{product.price}}">
+        </div>
+        <div class="form-group">
+        <label for="exampleFormControlSelect1">Category</label>
+        <select class="form-control" id="exampleFormControlSelect1" name="category">
+<!--          <option>Select Category</option>-->
+            <option value={{category.uid}}>{{product.category}}</option>
+            {%for category in category_list%}
+            <option value={{category.uid}}>{{category}}</option>
+            {%endfor%}
+        </select>
+        </div>
+        <div class="form-group">
+        <label for="product_description">Description</label>
+        <textarea class="form-control" id="product_description" name="product_description" rows="3">{{product.product_description}}</textarea>
+        </div>
+
+   <div class="form-group">
+    <label for="color-variants-container">Color Variants:</label>
+    <div id="color-variants-container">
+
+          {% for color in product.color_variant.all %}
+       <div class="input-group mb-2">
+        <input type="text" name="color_variant[]" class="form-control color-input" value="{{color.color_name}}">
+        <input type="number" name="color_price[]" class="form-control price-input" value="{{color.price}}">
+        <input type="number" name="color_quantity[]" class="form-control quantity-input" value="{{color.quantity}}">
+        <div class="input-group-append">
+          <button type="button" class="btn btn-danger remove-field">-</button>
+        </div>
+      </div>
+          {%endfor%}
+
+    </div>
+  </div>
+  <button type="button" id="add-field-color" class="btn btn-primary">+</button>
+
+
+  <div class="form-group">
+    <label for="size-variants-container">Size Variants:</label>
+    <div id="size-variants-container">
+
+          {% for size in product.size_variant.all %}
+        <div class="input-group mb-2">
+        <input type="text" name="size_variant[]" class="form-control size-input" value="{{size.size_name}}">
+        <input type="number" name="size_price[]" class="form-control price-input" value="{{size.price}}">
+        <input type="number" name="size_quantity[]" class="form-control quantity-input" value="{{size.quantity}}">
+         <div class="input-group-append">
+          <button type="button" class="btn btn-danger remove-field">-</button>
+        </div>
+        </div>
+          {%endfor%}
+
+
+    </div>
+  </div>
+  <button type="button" id="add-field-size" class="btn btn-primary">+</button>
+
+
+<!--<div class="form-group">-->
+<!--  <label for="product-images-container">Product Images:</label>-->
+<!--  <div id="product-images-container">-->
+<!--    <div class="input-group mb-2">-->
+<!--      <input type="file" name="product_images[]" class="form-control-file" accept="image/*">-->
+<!--      <div class="input-group-append">-->
+<!--        <button type="button" class="btn btn-danger remove-field">-</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <button type="button" id="add-field-image" class="btn btn-primary">+</button>-->
+<!--</div>-->
+
+
+
+<div class="btn-group" style="float:right;margin-top:25px">
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="reset" class="btn btn-warning">Reset</button>
+</div>
+
+</form>
+
+</div>
+
+
+
+
+
+<!--                        <div class="row">-->
+<!--                            <div class="col-xl-6">-->
+<!--                                <div class="card mb-4">-->
+
+<!--                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
+<!--                            </div>-->
+<!--                            </div>-->
+
+
+                    </div>
+                </main>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const colorVariantsContainer = document.getElementById('color-variants-container');
+    const addColorFieldButton = document.getElementById('add-field-color');
+
+    // Function to create a new color input field
+    function createColorInputField() {
+      const div = document.createElement('div');
+      div.classList.add('input-group', 'mb-2');
+
+      const colorInput = document.createElement('input');
+      colorInput.type = 'text';
+      colorInput.name = 'color_variant[]';
+      colorInput.classList.add('form-control', 'color-input');
+      colorInput.placeholder = 'Color Variant';
+
+      const priceInput = document.createElement('input');
+      priceInput.type = 'number';
+      priceInput.name = 'color_price[]';
+      priceInput.classList.add('form-control', 'price-input');
+      priceInput.placeholder = 'Price';
+
+
+      const quantityInput = document.createElement('input');
+      quantityInput.type = 'number';
+      quantityInput.name = 'color_quantity[]';
+      quantityInput.classList.add('form-control', 'quantity-input');
+      quantityInput.placeholder = 'Quantity';
+
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.classList.add('btn', 'btn-danger', 'remove-field');
+      removeButton.textContent = '-';
+
+      const appendDiv = document.createElement('div');
+      appendDiv.classList.add('input-group-append');
+      appendDiv.appendChild(removeButton);
+
+      div.appendChild(colorInput);
+      div.appendChild(priceInput);
+      div.appendChild(quantityInput);
+      div.appendChild(appendDiv);
+
+
+      colorVariantsContainer.appendChild(div);
+    }
+
+    // Event listener for adding a new color input field
+    addColorFieldButton.addEventListener('click', function() {
+      createColorInputField();
+    });
+
+    // Event listener for removing a color input field
+    colorVariantsContainer.addEventListener('click', function(event) {
+      if (event.target.classList.contains('remove-field')) {
+        const fieldContainer = event.target.closest('.input-group');
+        colorVariantsContainer.removeChild(fieldContainer);
+      }
+    });
+  });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const sizeVariantsContainer = document.getElementById('size-variants-container');
+    const addSizeFieldButton = document.getElementById('add-field-size');
+
+    // Function to create a new size input field
+    function createSizeInputField() {
+      const div = document.createElement('div');
+      div.classList.add('input-group', 'mb-2');
+
+      const sizeInput = document.createElement('input');
+      sizeInput.type = 'text';
+      sizeInput.name = 'size_variant[]';
+      sizeInput.classList.add('form-control', 'size-input');
+      sizeInput.placeholder = 'Size Variant';
+
+      const priceInput = document.createElement('input');
+      priceInput.type = 'number';
+      priceInput.name = 'size_price[]';
+      priceInput.classList.add('form-control', 'price-input');
+      priceInput.placeholder = 'Price';
+
+      const quantityInput = document.createElement('input');
+      quantityInput.type = 'number';
+      quantityInput.name = 'size_quantity[]';
+      quantityInput.classList.add('form-control', 'quantity-input');
+      quantityInput.placeholder = 'Quantity';
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.classList.add('btn', 'btn-danger', 'remove-field');
+      removeButton.textContent = '-';
+
+      const appendDiv = document.createElement('div');
+      appendDiv.classList.add('input-group-append');
+      appendDiv.appendChild(removeButton);
+
+      div.appendChild(sizeInput);
+      div.appendChild(priceInput);
+      div.appendChild(quantityInput);
+      div.appendChild(appendDiv);
+
+      sizeVariantsContainer.appendChild(div);
+    }
+
+    // Event listener for adding a new size input field
+    addSizeFieldButton.addEventListener('click', function() {
+      createSizeInputField();
+    });
+
+    // Event listener for removing a size input field
+    sizeVariantsContainer.addEventListener('click', function(event) {
+      if (event.target.classList.contains('remove-field')) {
+        const fieldContainer = event.target.closest('.input-group');
+        sizeVariantsContainer.removeChild(fieldContainer);
+      }
+    });
+  });
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('product-images-container');
+    const addButton = document.getElementById('add-field-image');
+
+    // Function to create a new input field
+    function createInputField() {
+      const div = document.createElement('div');
+      div.classList.add('input-group', 'mb-2');
+
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.name = 'product_images[]';
+      input.classList.add('form-control-file');
+      input.accept = 'image/*';
+
+      const appendDiv = document.createElement('div');
+      appendDiv.classList.add('input-group-append');
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.classList.add('btn', 'btn-danger', 'remove-field');
+      removeButton.textContent = '-';
+
+      appendDiv.appendChild(removeButton);
+
+      div.appendChild(input);
+      div.appendChild(appendDiv);
+
+      container.appendChild(div);
+    }
+
+    // Event listener for adding a new input field
+    addButton.addEventListener('click', function() {
+      createInputField();
+    });
+
+    // Event listener for removing an input field
+    container.addEventListener('click', function(event) {
+      if (event.target.classList.contains('remove-field')) {
+        const fieldContainer = event.target.closest('.input-group');
+        container.removeChild(fieldContainer);
+      }
+    });
+  });
+
+
+
+
+
+</script>
+
+
+
+{%endif%}
+{%endblock%}

@@ -1,0 +1,142 @@
+{%extends 'store/base.html'%}
+{%load static%}
+{%block title%}Fashion Store{%endblock%}
+{% load custom_filters %}
+{%block body%}
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            {%for item in cart_items%}
+                            <tbody>
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        <img src="img/cart/cart-1.jpg" alt="">
+                                        <h5>{{item.product.product_name}} [{{item.product_variant.Color_id.color}}({{item.product_variant.size}})]</h5>
+                                        <p></p>
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        ${{item.product_variant.price}}
+                                    </td>
+                                    <td class="shoping__cart__quantity">
+                                        <div class="quantity">
+                                            <div class="pro-qty-1">
+                                                <input type="text" value="{{item.quantity}}" readonly>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="shoping__cart__total">
+                                        ${{ item.product_variant.price | multiply:item.quantity }}
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__btns">
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+<!--                    <div class="row">-->
+<!--                        <div class="shoping__continue">-->
+<!--                        <div class="shoping__discount">-->
+<!--                            <h5>Discount Codes</h5>-->
+<!--                            <form action="{%url 'apply_coupon'%}" method="post">-->
+<!--                                <input type="text" placeholder="Enter your coupon code" required>-->
+<!--                                <button type="submit" class="site-btn">APPLY COUPON</button>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    </div><br>-->
+                    <div class="row">
+                        {%for address in address_list%}
+                        <div class="row justify-content-between" style="border:1px solid black;width:100%;padding-left:5px;padding-right:5px;">
+                            <div>
+                            <address>
+                            {{address.first_name}} {{address.last_name}}<br>
+                            Email: {{address.email}}<br>
+                            Mobile: {{address.phone}}<br>
+                            Address:{{address.address_line_1}}, {{address.address_line_2}},<br>
+                            {{address.city}}, {{address.state}}, {{address.pincode}}
+                            </address>
+                            </div>
+                            <div>
+                              {%if address.is_default%}
+                              <a style="color:green" href="#">Selected</a>&nbsp;|&nbsp;
+                              {%else%}
+                              <a style="color:black" href="{%url 'select_address' address_id=address.id%}">Select</a>&nbsp;|&nbsp;
+                              {%endif%}
+                              <a style="color:black" href="../user_address_edit?address_id={{address.id}}">Edit</a>
+                            </div>
+                        </div>
+                    {%endfor%}
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Cart Total</h5>
+                        <ul>
+                            <li>Subtotal <span>${{total}}</span></li>
+                            <li>Tax <span>${{tax}}</span></li>
+                            <li>Total <span>${{grant_total}}</span></li>
+                        </ul>
+                        <form action="{% url 'place_order' %}" method="post">
+                            {% csrf_token %}
+                        <button type="submit" class="primary-btn" style="width:100%">PLACE ORDER</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+<style>
+    .pro-qty-1 {
+	width: 140px;
+	height: 50px;
+	display: inline-block;
+	position: relative;
+	text-align: center;
+	background: #f5f5f5;
+	margin-bottom: 5px;
+}
+
+.pro-qty-1 input {
+	height: 100%;
+	width: 100%;
+	font-size: 16px;
+	color: #6f6f6f;
+	width: 50px;
+	border: none;
+	background: #f5f5f5;
+	text-align: center;
+}
+
+.pro-qty-1 .qtybtn {
+	width: 35px;
+	font-size: 16px;
+	color: #6f6f6f;
+	cursor: pointer;
+	display: inline-block;
+}
+</style>
+{%endblock%}
