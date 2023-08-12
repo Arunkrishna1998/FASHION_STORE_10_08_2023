@@ -145,8 +145,12 @@ urlpatterns = [
 	path('product_variants_stock_delete/<uuid:size_id>/<uuid:product_id>/', views.product_variants_stock_delete,
 		 name='product_variants_stock_delete'),
 
-	path('verifyEmail', views.verifyEmail,
-		 name='verifyEmail'),
+	path('verifyEmail', views.verifyEmail, name='verifyEmail'),
+
+	path('admin_manage_offers', views.admin_manage_offers, name='admin_manage_offers'),
+	path('admin_discount_add', views.admin_discount_add, name='admin_discount_add'),
+	path('search_discount', views.search_discount, name='search_discount'),
+	path('admin_discount_delete/<discount_id>/', views.admin_discount_delete, name='admin_discount_delete'),
 
 
 ]

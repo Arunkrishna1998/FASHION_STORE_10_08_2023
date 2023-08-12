@@ -1,0 +1,116 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Coupons Details{%endblock%}
+{%block body%}
+{% if user.is_authenticated %}
+
+
+
+<main>
+<div class="container-fluid px-4">
+<h1 class="mt-4">Discount/Offers</h1>
+<ol class="breadcrumb mb-4">
+<li class="breadcrumb-item active">Coupons</li>
+</ol>
+
+<div class="row">
+<div class="col-xl-6">
+<div class="card mb-4">
+    <h4>Add Discount</h4>
+<form action="{%url 'admin_discount_add'%}" method="post">
+{% csrf_token %}
+    <label for="discount">Add Discount in %</label>
+    <input type="text" id="discount" class="form-control" name="discount" placeholder="Discount in %" required >
+    <label for="category">Category</label>
+    <select class="form-control"  name="category" id="category" required>
+    <option disabled>Select Category</option>
+        {%for category in categories%}
+    <option value="{{ category.uid }}">{{category.category_name}}</option>
+        {%endfor%}
+    </select>
+
+    <div style="float:right;padding-top:10px;">
+        <button class="btn btn-success" type="submit">Submit</button>
+        <button class="btn btn-warning" type="reset">Reset</button>
+    </div>
+
+</form>
+
+
+<div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+</div>
+</div>
+
+<div class="card mb-4">
+<div class="card-header">
+<i class="fas fa-table me-1"></i>
+Coupon Details
+</div>
+<div class="card-body">
+    <form action="{%url 'search_discount'%}" method="get">
+    <div style="float:right;width:50%" class="input-group">
+        <select class="form-control"  name="category_id" id="category_name" required>
+        <option disabled>Select Category</option>
+        {%for category in categories%}
+        <option value="{{ category.uid }}">{{category.category_name}}</option>
+        {%endfor%}
+    </select>
+        <button class="btn btn-info" type="submit">Search</button>
+    </div>
+    </form>
+<table id="datatablesSimple">
+<thead>
+    <tr>
+        <th>Discount%</th>
+        <th>Category</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tfoot>
+    <tr>
+        <th>Discount%</th>
+        <th>Category</th>
+        <th>Action</th>
+    </tr>
+</tfoot>
+
+<tbody>
+{%for dis in discounts%}
+<tr>
+    <td>{{dis.discount}}</td>
+    <td>{{dis.category.category_name}}</td>
+
+    <td>
+<!--        <a class="btn btn-warning" href="../admin_coupons_update?coupon_id={{coupon.id}}">Edit</a>-->
+        <a class="btn btn-danger" href="{%url 'admin_discount_delete' discount_id=dis.id%}" onclick="return confirm('Are You Sure You want to Delete this Offer?')">Delete</a>
+    </td>
+</tr>
+{%endfor%}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+
+
+
+
+<script>
+const expDateInputs = document.querySelectorAll('input[type="date"]');
+
+// Get the current date in the format "YYYY-MM-DD"
+const currentDate = new Date().toISOString().split('T')[0];
+
+// Set the "min" attribute of all date inputs to the current date
+expDateInputs.forEach(input => {
+    input.setAttribute("min", currentDate);
+});
+</script>
+{%endif%}
+{%endblock%}
+
+
+

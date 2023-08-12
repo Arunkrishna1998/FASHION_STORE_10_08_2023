@@ -42,6 +42,9 @@ class Products(BaseModel):
 	slug = models.SlugField(max_length=100,unique=True, null=True, blank=True)
 	category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
 	price = models.FloatField()
+	discount = models.IntegerField(null=True)
+	rprice = models.FloatField()
+
 	product_description = models.TextField()
 	image = models.ImageField(upload_to="products")
 
@@ -75,6 +78,7 @@ class SizeVariant(BaseModel):
 	Color_id = models.ForeignKey(ColorVariant, on_delete=models.CASCADE)
 	size = models.CharField(max_length=50)
 	price = models.FloatField()
+	rprice = models.FloatField()
 	stock = models.IntegerField()
 
 
@@ -270,5 +274,7 @@ class return_request(models.Model):
 	moreinfo = models.TextField()
 	status = models.CharField(max_length=15)
 
-
+class Discounts(models.Model):
+	discount = models.IntegerField()
+	category = models.ForeignKey(Category, on_delete=models.CASCADE)
 

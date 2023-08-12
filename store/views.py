@@ -537,6 +537,7 @@ def admin_product_add(request):
         product = Products.objects.create(
             product_name=product_name,
             price=product_price,
+            rprice=product_price,
             category=category,
             product_description=product_description,
         )
@@ -898,6 +899,7 @@ def admin_product_update(request):
         product = Products.objects.get(uid=id)
         product.product_name=product_name
         product.price=product_price
+        product.rprice=product_price
         product.category=category
         product.product_description=product_description
         product.save()
@@ -2311,3 +2313,65 @@ def handler404(request, exception):
     response = render(request,'404.html')
     response.status_code = 404
     return response
+
+
+from . models import Discounts
+def admin_manage_offers(request):
+    categories = Category.objects.filter(is_deleted=False)
+    discounts = Discounts.objects.all()
+    context = {'categories':categories, 'discounts':discounts}
+    return render(request, 'admin_main/admin_manage_offers.html', context)
+
+
+
+def admin_discount_add(request):
+    if request.method == 'POST':
+        discount = request.POST.get('discount')
+        category_id = request.POST.get('category')
+        category = Category.objects.get(uid=category_id)
+        if Discounts.objects.filter(category=category).exists():
+            messages.warning(request, "There is Already One Discount offer on this product")
+            return redirect('admin_manage_offers')
+        if len(str(discount)) <=2 or discount == 100:
+            discount = int(discount) / 100
+            category = Category.objects.get(uid=category_id)
+            dis = Discounts(discount=(discount * 100), category=category)
+            dis.save()
+            product_list = Products.objects.filter(category=category)
+            for product in product_list:
+                product.discount = discount*100
+                product.price = round(product.rprice*discount,2)
+                product.save()
+                variant_list = SizeVariant.objects.filter(product_id=product)
+                for var in variant_list:
+                    var.price = round(var.rprice*discount,2)
+                    var.save()
+
+            messages.success(request, f'{discount*100}% Discount Added for all Products under {category.category_name}')
+        return redirect('admin_manage_offers')
+
+
+def search_discount(request):
+    category_id = request.GET.get('category_id')
+    category = Category.objects.filter(uid=category_id,is_deleted=False).first()
+    discounts = Discounts.objects.filter(category=category)
+    categories = Category.objects.filter(is_deleted=False)
+    context = {'categories': categories, 'discounts': discounts}
+    return render(request, 'admin_main/admin_manage_offers.html', context)
+
+
+def admin_discount_delete(request,discount_id):
+    discount = Discounts.objects.get(id=discount_id)
+    category = discount.category
+    product_list = Products.objects.filter(category=category)
+    for product in product_list:
+        product.discount = 0
+        product.price = product.rprice
+        product.save()
+        variant_list = SizeVariant.objects.filter(product_id=product)
+        for var in variant_list:
+            var.price = var.rprice
+            var.save()
+    discount.delete()
+    messages.info(request, "Discount Offer Deleted")
+    return redirect('admin_manage_offers')
