@@ -521,7 +521,6 @@ from .models import Category, ColorVariant, SizeVariant, Products, ProductImage
 @login_required(login_url='admin_login')
 def admin_product_add(request):
     if request.method == 'POST':
-        # try:
         product_name = request.POST.get('productname')
         product_price = request.POST.get('productprice')
         category_id = request.POST.get('category')
@@ -2340,7 +2339,7 @@ def admin_discount_add(request):
             product_list = Products.objects.filter(category=category)
             for product in product_list:
                 product.discount = discount*100
-                product.price = round(product.rprice*discount,2)
+                product.price = product.rprice - round(product.rprice*discount,2)
                 product.save()
                 variant_list = SizeVariant.objects.filter(product_id=product)
                 for var in variant_list:
@@ -2375,3 +2374,107 @@ def admin_discount_delete(request,discount_id):
     discount.delete()
     messages.info(request, "Discount Offer Deleted")
     return redirect('admin_manage_offers')
+
+
+def admin_dashboard(request):
+    orders = Order.objects.all().filter(Q(status='Pending')|Q(status='New'))
+    order_count = len(orders)
+
+    now = timezone.now()
+    week_start = now - timedelta(days=now.weekday())
+    month_start = now.replace(day=1)
+    year_start = now.replace(month=1, day=1)
+    total_week = \
+        Order.objects.filter(created_at__gte=week_start, created_at__lte=now).aggregate(total=Sum('order_total'))[
+            'total']
+    total_month = \
+        Order.objects.filter(created_at__gte=month_start, created_at__lte=now).aggregate(total=Sum('order_total'))[
+            'total']
+    total_year = \
+        Order.objects.filter(created_at__gte=year_start, created_at__lte=now).aggregate(total=Sum('order_total'))[
+            'total']
+
+    low_stock_items = SizeVariant.objects.filter(stock__lt=3)
+
+    product_quantities = OrderProduct.objects.values('product').annotate(total_quantity=Sum('quantity'))
+    sorted_products = product_quantities.order_by('-total_quantity')
+    top_3_products = sorted_products[:3]
+    product_list = Products.objects.all()
+
+    order_list = Order.objects.all().filter(status='Completed')
+    for ord in order_list:
+        print("-*-*-*- ", ord.created_at)
+
+    context = {'order_count':order_count,
+               'total_week': total_week,
+               'total_month': total_month,
+               'total_year': total_year,
+               'low_stock_items': low_stock_items,
+               'top_3_products':top_3_products,
+               'product_list': product_list,
+               'order_list':order_list
+               }
+    return render(request, 'admin_main/admin_dashboard.html', context)
+
+from datetime import datetime, time, timedelta
+
+def admin_dashboard_filter(request):
+    try:
+        from_date = request.GET.get('from-date')
+        to_date = request.GET.get('to-date')
+        from_date_1 = from_date
+        to_date_1 = to_date
+        orders = Order.objects.all().filter(Q(status='Pending')|Q(status='New'))
+        order_count = len(orders)
+
+        now = timezone.now()
+        week_start = now - timedelta(days=now.weekday())
+        month_start = now.replace(day=1)
+        year_start = now.replace(month=1, day=1)
+
+
+
+
+        total_week = \
+            Order.objects.filter(created_at__gte=week_start, created_at__lte=now).aggregate(total=Sum('order_total'))[
+                'total']
+        total_month = \
+            Order.objects.filter(created_at__gte=month_start, created_at__lte=now).aggregate(total=Sum('order_total'))[
+                'total']
+        total_year = \
+            Order.objects.filter(created_at__gte=year_start, created_at__lte=now).aggregate(total=Sum('order_total'))[
+                'total']
+
+        low_stock_items = SizeVariant.objects.filter(stock__lt=3)
+
+        product_quantities = OrderProduct.objects.values('product').annotate(total_quantity=Sum('quantity'))
+        sorted_products = product_quantities.order_by('-total_quantity')
+        top_3_products = sorted_products[:3]
+        product_list = Products.objects.all()
+        from_date = datetime.strptime(from_date, '%Y-%m-%d')
+        # to_date = datetime.strptime(to_date, '%Y-%m-%d')
+
+        from_date = f'{from_date}+00:00'
+        to_date = f'{to_date} 23:59:59+00:00'
+        if from_date <= to_date:
+            order_list = Order.objects.filter(created_at__gte=from_date,created_at__lte=to_date)
+            # print(order_list)
+
+        else:
+            messages.warning(request, 'Enter Valid Dates')
+            return redirect('admin_dashboard')
+
+        context = {'order_count':order_count,
+                   'total_week': total_week,
+                   'total_month': total_month,
+                   'total_year': total_year,
+                   'low_stock_items': low_stock_items,
+                   'top_3_products':top_3_products,
+                   'product_list': product_list,
+                   'order_list':order_list,
+                   'from_date':from_date_1,
+                   'to_date':to_date_1,
+                   }
+        return render(request, 'admin_main/admin_dashboard.html', context)
+    except:
+        return redirect('admin_dashboard')

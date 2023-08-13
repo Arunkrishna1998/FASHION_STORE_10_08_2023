@@ -9,7 +9,7 @@
         <h1 class="mt-4">Add New Product</h1>
 
         <div class="container" style="width:70%">
-            <form action="{% url 'admin_product_add' %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'admin_product_add' %}" method="post" enctype="multipart/form-data" onsubmit="return validateAddForm()">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="productname">Product Name</label>
@@ -50,6 +50,31 @@
         </div>
     </div>
 </main>
+<script>
+function validateAddForm() {
+var productname = document.getElementById("productname").value;
+var product_description = document.getElementById("product_description").value;
 
+var productPriceInput = document.getElementById("productprice");
+var productPriceValue = parseFloat(productPriceInput.value);
+
+if (isNaN(productPriceValue) || productPriceValue <= 0) {
+    alert("Product price must be a valid positive number.");
+    return false; // Prevent form submission
+}
+
+if (product_description.trim() === "") {
+alert("Only white spaces in Description.");
+return false; // Prevent form submission
+}
+
+
+if (productname.trim() === "") {
+alert("Only white spaces in Product Name.");
+return false; // Prevent form submission
+}
+return true; // Allow form submission
+}
+</script>
 {% endif %}
 {% endblock %}

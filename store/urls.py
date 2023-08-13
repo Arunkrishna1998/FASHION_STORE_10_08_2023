@@ -152,6 +152,9 @@ urlpatterns = [
 	path('search_discount', views.search_discount, name='search_discount'),
 	path('admin_discount_delete/<discount_id>/', views.admin_discount_delete, name='admin_discount_delete'),
 
+	path('admin_dashboard', views.admin_dashboard, name='admin_dashboard'),
+	path('admin_dashboard_filter', views.admin_dashboard_filter, name='admin_dashboard_filter'),
+
 
 ]
 

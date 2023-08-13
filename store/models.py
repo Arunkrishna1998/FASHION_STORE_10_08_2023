@@ -139,6 +139,9 @@ class Order(models.Model):
 	def full_address(self):
 		return f'{self.address_line_1} {self.address_line_2}'
 
+	# def created_at_date(self):
+
+
 
 class OrderProduct(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

@@ -1,0 +1,249 @@
+{%extends 'admin_main/admin_base.html'%}
+{%load static%}
+{%block title%}Admin Home{%endblock%}
+{%block body%}
+{% if user.is_authenticated and user.is_superuser  %}
+<!--1-->
+                <div class="container">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+<!--                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i-->
+<!--                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Earnings (Weekly)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{total_week}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Earnings (Monthly)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{total_month}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Earnings (Annual)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{total_year}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Products in Store
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                </div>
+                                                <div class="col">
+<!--                                                    <div class="progress progress-sm mr-2">-->
+<!--                                                        <div class="progress-bar bg-info" role="progressbar"-->
+<!--                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"-->
+<!--                                                            aria-valuemax="100"></div>-->
+<!--                                                    </div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Pending Orders</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{order_count}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<!--1 end-->
+
+<div class="container">
+    <h1 class="h3 mb-0 text-gray-800">Sales</h1>
+    <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Sales Details
+            </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col">
+            <div class="input-group admin-search-box" style="width:100%">
+                <form action="{%url 'admin_dashboard_filter'%}" method="get">
+                    <label>From</label>
+                <input type="date" name="from-date" value="{{from_date}}" required>
+                    <label>To</label>
+                <input type="date" name="to-date" value="{{to_date}}" required>
+                <input type="submit" value="Search">
+                </form>
+            </div>
+            </div>
+            <div class="col" style="float:right">
+<!--                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i-->
+<!--                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
+            </div>
+        </div>
+
+            <div class="card-body">
+                <table id="datatablesSample" style="width:100%">
+                    <thead>
+                    <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Payment</th>
+                    <th>Order Number</th>
+                    <th>Amount</th>
+                    <th>Tax</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Completed Date</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                {% for ord in order_list %}
+                <tr>
+                <td>{{ ord.first_name }} {{ ord.last_name }}</td>
+                <td>{{ ord.phone }}</td>
+                <td>{{ ord.email }}</td>
+                <td>{{ord.payment.payment_id}}({{ ord.payment }})</td>
+                <td>{{ ord.order_number }}</td>
+                <td>{{ ord.order_total }}</td>
+                <td>{{ ord.tax }}</td>
+                <td>{{ ord.created_at |date:"d/m/Y" }}</td>
+                <td>{{ ord.status }}</td>
+                <td>{{ ord.updated_at |date:"d/m/Y" }}</td>
+
+
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+</div>
+
+
+<!--2-->
+                <div class="container">
+                    <h1 class="h3 mb-0 text-gray-800">Low Stock Products</h1>
+                    <div class="col-3"></div>
+                    <div class="col-8">
+                    {%if low_stock_items%}
+                        <table class="low-stock-table">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Color</th>
+                            <th>Size</th>
+                            <th>Action</th>
+                        </tr>
+                        {% for item in low_stock_items %}
+                        <tr>
+                            <td>{{ item.product_id.product_name }}</td>
+                            <td>{{ item.Color_id.color }}</td>
+                            <td>{{ item.size }}</td>
+                            <td><a class="btn btn-info" href="{%url 'product_variants_stock_update' size_id=item.uid product_id=item.product_id.uid%}">Update</a></td>
+                        </tr>
+                        {% endfor %}
+                        </table>
+                    {%else%}
+                    <h5>-No Data To Display-</h5>
+                    {%endif%}
+                    </div>
+                    <div class="col-3"></div>
+
+                </div>
+
+                <div class="container" style="margin-top:100px;">
+                    <h1 class="h3 mb-0 text-gray-800">Top 3 Sold Products</h1>
+                    {%for product in top_3_products%}
+            {%for p in product_list%}
+            {%if p.uid ==  product.product%}
+            <div class="card" style="width: 18rem;margin-left:10px;height:400px;">
+            <img class="card-img-top" src="{{p.image.url}}" alt="Card image cap" height="50%">
+            <div class="card-body">
+            <h5 class="card-title">{{p.product_name}}</h5>
+            <p class="card-text">${{p.price}}</p>
+<!--                            <a href="#" class="btn btn-primary">View</a>-->
+            </div>
+            </div>
+            {%endif%}
+            {%endfor%}
+            {%endfor%}
+
+                </div>
+
+<!--2 end-->
+{%endif%}
+<style>
+.low-stock-table{
+width:100%;
+}
+    .low-stock-table, th, td{
+    border: 1px solid;
+    text-align:center;
+    }
+</style>
+
+{%endblock%}
