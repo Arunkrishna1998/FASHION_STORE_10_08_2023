@@ -260,7 +260,7 @@ def admin_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None and user.is_staff == True:
                 login(request, user)
-                return redirect('admin_home')
+                return redirect('admin_dashboard')
             else:
                 form.add_error(None, 'Invalid username or password')
         else:
